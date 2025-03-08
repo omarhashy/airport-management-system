@@ -8,6 +8,7 @@ import {
 import { Airline } from './airline.entity';
 import { Flight } from 'src/flights/entities/flight.entity';
 import { Admin } from 'src/users/entities/admin.entity';
+import { StaffMember } from 'src/users/entities/staff-member.entity';
 
 @Entity()
 export class Airport {
@@ -34,4 +35,7 @@ export class Airport {
 
   @OneToOne(() => Admin, (admin) => admin.airport)
   admin: Admin;
+
+  @OneToMany(() => StaffMember, (staffMember) => staffMember.airport)
+  staffMembers: StaffMember[];
 }

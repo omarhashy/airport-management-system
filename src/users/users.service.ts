@@ -1,4 +1,33 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from './entities/user.entity';
+import { Repository } from 'typeorm';
+import { UserRole } from 'src/enums/user-roles.enum';
 
 @Injectable()
-export class UsersService {}
+export class UsersService {
+  constructor(
+    @InjectRepository(User) private userRepository: Repository<User>,
+  ) {}
+
+  createUser(
+    firstName: string,
+    lastName: string,
+    email: string,
+    password: string,
+    role: UserRole,
+  ) {
+    const user = this.userRepository.create({
+      firstName,
+      lastName,
+      email,
+      password,
+      role,
+    });
+    return this.userRepository.save(user);
+  }
+  findByEmail(email: string) {
+    if (!email) return null;
+    return this.userRepository.findOne({ where: { email } });
+  }
+}

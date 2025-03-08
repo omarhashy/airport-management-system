@@ -3,5 +3,7 @@ import { AirportsService } from './airports.service';
 
 @Resolver()
 export class AirportsResolver {
-  constructor(private readonly airportsService: AirportsService) {}
+  constructor(private readonly airportsService: AirportsService) {
+    
+  }
 }

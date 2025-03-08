@@ -11,6 +11,7 @@ import {
 import { User } from './user.entity';
 import { Flight } from 'src/flights/entities/flight.entity';
 import { staffRole } from 'src/auth/entities/staff-role.entity';
+import { Airport } from 'src/airports/entities/airport.entity';
 
 @Entity()
 export class StaffMember {
@@ -30,4 +31,7 @@ export class StaffMember {
   @ManyToMany(() => Flight, (flight) => flight.staffMembers)
   @JoinTable({ name: 'assigned-flights' })
   assignedFlights!: Flight[];
+
+  @ManyToOne(() => Airport, (airport) => airport.staffMembers)
+  airport: Airport;
 }

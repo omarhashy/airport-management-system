@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, ValidationPipe } from '@nestjs/common';
 import { AirportsModule } from './airports/airports.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
@@ -18,12 +18,19 @@ import { Passenger } from './users/entities/passenger.entity';
 import { Admin } from './users/entities/admin.entity';
 import { Seat } from './bookings/entities/seats.entity';
 import { Booking } from './bookings/entities/bookings.entity';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { APP_PIPE } from '@nestjs/core';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
+    }),
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      autoSchemaFile: 'schema.gql',
     }),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
@@ -50,7 +57,7 @@ import { Booking } from './bookings/entities/bookings.entity';
           ],
           database: config.get('POSTGRES_DB'),
           synchronize: true,
-          dropSchema: true,
+          // dropSchema: true,
           // logging: true,
         };
       },
@@ -62,6 +69,11 @@ import { Booking } from './bookings/entities/bookings.entity';
     BookingsModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_PIPE,
+      useValue: new ValidationPipe(),
+    },
+  ],
 })
 export class AppModule {}

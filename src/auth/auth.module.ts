@@ -4,12 +4,17 @@ import { AuthResolver } from './auth.resolver';
 import { UsersModule } from 'src/users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Opt } from './entities/opt.entity';
+import { QueueModule } from 'src/queue/queue.module';
 
 @Module({
   providers: [AuthResolver, AuthService],
   exports: [AuthService],
   imports: [
+    TypeOrmModule.forFeature([Opt]),
     UsersModule,
+    QueueModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

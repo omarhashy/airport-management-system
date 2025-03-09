@@ -1,0 +1,41 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type User {
+  id: ID!
+  firstName: String!
+  lastName: String!
+  email: String!
+  role: UserRole!
+  verified: Boolean!
+}
+
+enum UserRole {
+  SUPER_ADMIN
+  ADMIN
+  STAFF_MEMBER
+  PASSENGER
+}
+
+type Query {
+  sayHello: String!
+}
+
+type Mutation {
+  registerUser(userData: RegisterUserDto!): User!
+  verifyUser(optData: VerifyUserDto!): User!
+}
+
+input RegisterUserDto {
+  firstName: String!
+  lastName: String!
+  email: String!
+  password: String!
+  role: UserRole
+}
+
+input VerifyUserDto {
+  userId: Int!
+  opt: String!
+}

@@ -10,22 +10,28 @@ import {
   IsEnum,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
+import { Field, InputType } from '@nestjs/graphql';
 
-export class registerUserDto {
+@InputType()
+export class RegisterUserDto {
   @IsString()
   @IsNotEmpty()
   @MaxLength(10)
   @IsAlpha()
+  @Field()
   firstName: string;
 
   @IsString()
   @IsNotEmpty()
   @MaxLength(10)
   @IsAlpha()
+  @Field()
   lastName: string;
 
   @IsEmail()
   @Transform(({ value }) => value.trim())
+  @Field()
+  @Field()
   email: string;
 
   @IsString()
@@ -33,9 +39,10 @@ export class registerUserDto {
   @MaxLength(255)
   @MinLength(5)
   @IsAlphanumeric()
+  @Field()
   password: string;
 
-  @IsNotEmpty()
   @IsEnum(UserRole)
-  role: UserRole;
+  @Field(() => UserRole, { nullable: true })
+  role!: UserRole;
 }

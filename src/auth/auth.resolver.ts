@@ -1,5 +1,8 @@
-import { Int, Mutation, Resolver, Query } from '@nestjs/graphql';
+import {  Mutation, Resolver, Query, Args } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
+import { User } from 'src/users/entities/user.entity';
+import { RegisterUserDto } from './Dtos/register-user.dto';
+import { VerifyUserDto } from './Dtos/verify-user.dto';
 
 @Resolver()
 export class AuthResolver {
@@ -7,5 +10,15 @@ export class AuthResolver {
   @Query(() => String)
   sayHello(): string {
     return 'Hello, world!';
+  }
+
+  @Mutation((returns) => User)
+  registerUser(@Args('userData') registerUserDto: RegisterUserDto) {
+    return this.authService.registerUser(registerUserDto);
+  }
+
+  @Mutation((returns) => User)
+  verifyUser(@Args('optData') verifyUserDto: VerifyUserDto) {
+    return this.authService.verifyUser(verifyUserDto);
   }
 }

@@ -6,34 +6,33 @@ import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 @Entity()
 @ObjectType()
 export class User {
-  @Field(() => ID)
   @PrimaryGeneratedColumn()
+  @Field(() => ID)
   id: number;
 
-  @Field()
   @Column()
+  @Field()
   firstName: string;
 
-  @Field()
   @Column()
+  @Field()
   lastName: string;
 
-  @Field()
   @Column()
+  @Field()
   email: string;
 
-  @Field()
   @Column()
   password: string;
 
-  @Field(() => UserRole)
   @Column({ type: 'enum', enum: UserRole, default: UserRole.PASSENGER })
+  @Field(() => UserRole)
   role: UserRole;
-  
-  @Field()
+
   @Column({ default: false })
+  @Field()
   verified: boolean;
-  
+
   @OneToOne(() => Opt, (opt) => opt.user)
   opt?: Opt;
 }

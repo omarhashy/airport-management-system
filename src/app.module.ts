@@ -21,6 +21,7 @@ import { Booking } from './bookings/entities/bookings.entity';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { APP_PIPE } from '@nestjs/core';
+import { QueueModule } from './queue/queue.module';
 
 @Module({
   imports: [
@@ -30,7 +31,7 @@ import { APP_PIPE } from '@nestjs/core';
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      autoSchemaFile: 'schema.gql',
+      autoSchemaFile: 'src/schema.gql',
     }),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
@@ -57,7 +58,7 @@ import { APP_PIPE } from '@nestjs/core';
           ],
           database: config.get('POSTGRES_DB'),
           synchronize: true,
-          // dropSchema: true,
+          dropSchema: true,
           // logging: true,
         };
       },
@@ -67,6 +68,7 @@ import { APP_PIPE } from '@nestjs/core';
     AuthModule,
     FlightsModule,
     BookingsModule,
+    QueueModule,
   ],
   controllers: [],
   providers: [

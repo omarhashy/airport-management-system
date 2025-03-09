@@ -6,7 +6,6 @@ import {
   JoinColumn,
   OneToOne,
   PrimaryGeneratedColumn,
-  CreateDateColumn,
 } from 'typeorm';
 
 @Entity()
@@ -14,7 +13,7 @@ export class Opt {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'varchar', length: 6 })
+  @Column({ type: 'varchar', length: 6, unique: true })
   opt: string;
 
   @OneToOne(() => User, (user) => user.opt, { onDelete: 'CASCADE' })
@@ -24,6 +23,6 @@ export class Opt {
   @Column({ type: 'enum', enum: OptType })
   type: OptType;
 
-  @CreateDateColumn({ type: 'timestamp' })
-  createdAt: Date;
+  @Column({ type: 'timestamp' })
+  expiryDate: Date;
 }

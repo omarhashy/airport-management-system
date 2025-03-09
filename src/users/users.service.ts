@@ -26,8 +26,17 @@ export class UsersService {
     });
     return this.userRepository.save(user);
   }
-  findByEmail(email: string) {
+  findUserByEmail(email: string) {
     if (!email) return null;
     return this.userRepository.findOne({ where: { email } });
+  }
+
+  findUserById(id: number) {
+    if (!id) return null;
+    return this.userRepository.findOne({ where: { id } });
+  }
+  verifyUser(user: User) {
+    user.verified = true;
+    return this.userRepository.save(user);
   }
 }

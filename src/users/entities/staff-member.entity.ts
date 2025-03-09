@@ -21,7 +21,7 @@ export class StaffMember {
   @Column({ type: 'varchar', length: 9 })
   employeeId: string;
 
-  @OneToOne(() => User)
+  @OneToOne(() => User, { onDelete: 'CASCADE' })
   @JoinColumn()
   user: User;
 

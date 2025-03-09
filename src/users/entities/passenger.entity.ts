@@ -20,7 +20,7 @@ export class Passenger {
   @Column()
   nationality: string;
 
-  @OneToOne(() => User)
+  @OneToOne(() => User, { onDelete: 'CASCADE' })
   @JoinColumn()
   user: User;
 

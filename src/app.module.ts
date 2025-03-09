@@ -10,7 +10,6 @@ import { Airport } from './airports/entities/airport.entity';
 import { Airline } from './airports/entities/airline.entity';
 import { Flight } from './flights/entities/flight.entity';
 import { User } from './users/entities/user.entity';
-import { Opt } from './auth/entities/opt.entity';
 import { staffRole } from './auth/entities/staff-role.entity';
 import { StaffPermission } from './auth/entities/staff-permission.entity';
 import { StaffMember } from './users/entities/staff-member.entity';
@@ -22,6 +21,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { APP_PIPE } from '@nestjs/core';
 import { QueueModule } from './queue/queue.module';
+import { Otp } from './auth/entities/otp.entity';
 
 @Module({
   imports: [
@@ -47,7 +47,7 @@ import { QueueModule } from './queue/queue.module';
             Airline,
             Flight,
             User,
-            Opt,
+            Otp,
             staffRole,
             StaffPermission,
             StaffMember,

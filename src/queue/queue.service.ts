@@ -5,19 +5,19 @@ import { Queue } from 'bullmq';
 @Injectable()
 export class QueueService {
   constructor(@InjectQueue('email') private emailQueue: Queue) {}
-  sendVerificationEmail(opt: string, emailAddress: string) {
+  sendVerificationEmail(otp: string, emailAddress: string) {
     const email = {
       subject: 'airport management system account verification',
-      text: `opt is ${opt}`,
+      text: `otp is ${otp}`,
       to: emailAddress,
     };
     this.emailQueue.add('verify use email', email);
   }
 
-  sendRestPasswordEmail(opt: string, emailAddress: string) {
+  sendRestPasswordEmail(otp: string, emailAddress: string) {
     const email = {
       subject: 'airport management system password reset',
-      text: `opt is ${opt}`,
+      text: `otp is ${otp}`,
       to: emailAddress,
     };
     this.emailQueue.add('password reset email', email);

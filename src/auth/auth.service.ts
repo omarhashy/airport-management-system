@@ -9,14 +9,16 @@ import { UsersService } from 'src/users/users.service';
 import { RegisterUserDto } from './Dtos/register-user.dto';
 import { User } from 'src/users/entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Opt } from './entities/opt.entity';
+import { Otp } from './entities/otp.entity';
 import { Repository } from 'typeorm';
-import { OptType } from 'src/enums/opt-type.enum';
+import { OtpType } from 'src/enums/otp-type.enum';
 import { VerifyUserEmailDto } from './Dtos/verify-user-email.dto';
 import { QueueService } from 'src/queue/queue.service';
 import { LoginUserDto } from './Dtos/login-user.dto';
 import { ResetUserPasswordDto } from './Dtos/reset-user-password.dto';
 import { VerifyResetUserPasswordDto } from './Dtos/verify-reset-user-password.dto';
+import { UserRole } from 'src/enums/user-roles.enum';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
@@ -24,47 +26,57 @@ export class AuthService {
     private usersService: UsersService,
     private jwtService: JwtService,
     private queueService: QueueService,
-    @InjectRepository(Opt) private optRepository: Repository<Opt>,
+    private configService: ConfigService,
+    @InjectRepository(Otp) private otpRepository: Repository<Otp>,
   ) {}
 
-  async generateUniqueOptString(): Promise<string> {
-    let opt: string;
-    let existingOpt: Opt | null;
+  async generateUniqueOtpString(): Promise<string> {
+    let otp: string;
+    let existingOtp: Otp | null;
     do {
-      opt = Array.from({ length: 6 }, () =>
+      otp = Array.from({ length: 6 }, () =>
         Math.floor(Math.random() * 10),
       ).join('');
-      existingOpt = await this.optRepository.findOne({ where: { opt } });
-    } while (existingOpt);
-    return opt;
+      existingOtp = await this.otpRepository.findOne({ where: { otp } });
+    } while (existingOtp);
+    return otp;
   }
 
-  findOptByUser(user: User) {
-    if (!User) return null;
-    return this.optRepository.findOne({ where: { user } });
+  findOtpByUser(user: User) {
+    if (!user) return null;
+    return this.otpRepository.findOne({ where: { user } });
   }
 
-  removeOpt(opt: Opt) {
-    if (!opt) return null;
-    return this.optRepository.remove(opt);
+  removeOtp(otp: Otp) {
+    if (!otp) return null;
+    return this.otpRepository.remove(otp);
   }
 
-  async createOpt(user: User, type: OptType) {
-    let opt = await this.findOptByUser(user);
-    if (opt) {
-      if (opt.expiryDate.getTime() < Date.now()) await this.removeOpt(opt);
-      else throw new BadRequestException('opt is still valid');
+  async createOtp(user: User, type: OtpType) {
+    let otp = await this.findOtpByUser(user);
+    if (otp) {
+      if (otp.expiryDate.getTime() < Date.now()) await this.removeOtp(otp);
+      else throw new BadRequestException('otp is still valid');
     }
-    opt = this.optRepository.create({
+    otp = this.otpRepository.create({
       user,
-      opt: await this.generateUniqueOptString(),
+      otp: await this.generateUniqueOtpString(),
       type: type,
       expiryDate: new Date(Date.now() + 3 * 60 * 1000),
     });
-    return this.optRepository.save(opt);
+    return this.otpRepository.save(otp);
   }
 
   async registerUser(registerUserDto: RegisterUserDto): Promise<User> {
+    if (
+      registerUserDto.role == UserRole.SUPER_ADMIN &&
+      registerUserDto.email !=
+        this.configService.getOrThrow('SUPER_ADMIN_EMAIL')
+    ) {
+      0;
+      throw new UnauthorizedException();
+    }
+
     if (await this.usersService.findUserByEmail(registerUserDto.email)) {
       throw new BadRequestException('email already exist');
     }
@@ -77,8 +89,8 @@ export class AuthService {
       hashedPassword,
       registerUserDto.role,
     );
-    const { opt } = await this.createOpt(user, OptType.VERIFY_EMAIL);
-    this.queueService.sendVerificationEmail(opt, user.email);
+    const { otp } = await this.createOtp(user, OtpType.VERIFY_EMAIL);
+    this.queueService.sendVerificationEmail(otp, user.email);
     return user;
   }
   async verifyUserEmail(verifyUserEmailDto: VerifyUserEmailDto) {
@@ -88,19 +100,19 @@ export class AuthService {
     if (!user) throw new BadRequestException('user does not exist');
     if (user.verified)
       throw new BadRequestException("user's email is already verified");
-    const opt = await this.findOptByUser(user);
-    if (!opt || opt.type != OptType.VERIFY_EMAIL)
-      throw new BadRequestException('opt does not exist');
+    const otp = await this.findOtpByUser(user);
+    if (!otp || otp.type != OtpType.VERIFY_EMAIL)
+      throw new BadRequestException('otp does not exist');
 
     if (
-      opt.expiryDate.getDate() > Date.now() ||
-      opt.opt != verifyUserEmailDto.opt
+      otp.expiryDate.getDate() > Date.now() ||
+      otp.otp != verifyUserEmailDto.otp
     ) {
       throw new UnauthorizedException();
     }
 
     user.verified = true;
-    await this.removeOpt(opt);
+    await this.removeOtp(otp);
     return this.usersService.verifyUser(user);
   }
 
@@ -129,9 +141,9 @@ export class AuthService {
     if (!user || !user.verified) {
       throw new UnauthorizedException();
     }
-    const { opt } = await this.createOpt(user, OptType.RESET_PASSWORD);
-    this.queueService.sendRestPasswordEmail(opt, user.email);
-    return { message: 'opt sent successfully' };
+    const { otp } = await this.createOtp(user, OtpType.RESET_PASSWORD);
+    this.queueService.sendRestPasswordEmail(otp, user.email);
+    return { message: 'otp sent successfully' };
   }
 
   async verifyRestUserPassword(
@@ -141,19 +153,19 @@ export class AuthService {
       verifyResetUserPasswordDto.email,
     );
     if (!user) throw new BadRequestException('user does not exist');
-    const opt = await this.findOptByUser(user);
+    const otp = await this.findOtpByUser(user);
     if (
-      !opt ||
-      opt.opt != verifyResetUserPasswordDto.opt ||
-      opt.type != OptType.RESET_PASSWORD ||
-      opt.expiryDate.getDate() > Date.now()
+      !otp ||
+      otp.otp != verifyResetUserPasswordDto.otp ||
+      otp.type != OtpType.RESET_PASSWORD ||
+      otp.expiryDate.getDate() > Date.now()
     )
       throw new UnauthorizedException();
     const hashedPassword = await bcrypt.hash(
       verifyResetUserPasswordDto.password,
       10,
     );
-    this.removeOpt(opt);
+    this.removeOtp(otp);
     await this.usersService.updateUserPassword(user, hashedPassword);
     return {
       message: 'password reset successfully',

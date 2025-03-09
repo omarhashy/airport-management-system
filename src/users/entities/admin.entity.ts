@@ -16,11 +16,11 @@ export class Admin {
   @Column()
   isSuperUser: boolean;
 
-    @OneToOne(() => Airport, (airport) => airport.admin)
-    @JoinColumn()
-    airport: Airport;
+  @OneToOne(() => Airport, (airport) => airport.admin)
+  @JoinColumn()
+  airport: Airport;
 
-    @OneToOne(() => User)
-    @JoinColumn()
-    user: User;
+  @OneToOne(() => User, { onDelete: 'CASCADE' })
+  @JoinColumn()
+  user: User;
 }

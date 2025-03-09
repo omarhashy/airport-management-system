@@ -9,7 +9,7 @@ export class VerifyUserEmailDto {
   email: string;
 
   @IsNotEmpty()
-  @Length(6, 6, { message: 'opt length should be exactly 6' })
+  @Length(6, 6, { message: 'otp length should be exactly 6' })
   @Field()
-  opt: string;
+  otp: string;
 }

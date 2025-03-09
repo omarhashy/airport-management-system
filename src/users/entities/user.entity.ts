@@ -1,5 +1,5 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
-import { Opt } from 'src/auth/entities/opt.entity';
+import { Otp } from 'src/auth/entities/otp.entity';
 import { UserRole } from 'src/enums/user-roles.enum';
 import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 
@@ -33,6 +33,6 @@ export class User {
   @Field()
   verified: boolean;
 
-  @OneToOne(() => Opt, (opt) => opt.user)
-  opt?: Opt;
+  @OneToOne(() => Otp, (otp => otp.user))
+  otp?: Otp;
 }

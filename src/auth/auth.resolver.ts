@@ -23,7 +23,7 @@ export class AuthResolver {
   }
 
   @Mutation((returns) => User)
-  verifyUserEmail(@Args('optData') verifyDto: VerifyUserEmailDto) {
+  verifyUserEmail(@Args('otpData') verifyDto: VerifyUserEmailDto) {
     return this.authService.verifyUserEmail(verifyDto);
   }
 

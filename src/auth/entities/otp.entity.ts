@@ -1,4 +1,4 @@
-import { OptType } from 'src/enums/opt-type.enum';
+import { OtpType } from 'src/enums/otp-type.enum';
 import { User } from 'src/users/entities/user.entity';
 import {
   Column,
@@ -9,19 +9,19 @@ import {
 } from 'typeorm';
 
 @Entity()
-export class Opt {
+export class Otp {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ type: 'varchar', length: 6, unique: true })
-  opt: string;
+  otp: string;
 
-  @OneToOne(() => User, (user) => user.opt, { onDelete: 'CASCADE' })
+  @OneToOne(() => User, (user) => user.otp, { onDelete: 'CASCADE' })
   @JoinColumn()
   user: User;
 
-  @Column({ type: 'enum', enum: OptType })
-  type: OptType;
+  @Column({ type: 'enum', enum: OtpType })
+  type: OtpType;
 
   @Column({ type: 'timestamp' })
   expiryDate: Date;

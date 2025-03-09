@@ -12,9 +12,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Opt } from './entities/opt.entity';
 import { Repository } from 'typeorm';
 import { OptType } from 'src/enums/opt-type.enum';
-import { VerifyUserDto } from './Dtos/verify-user.dto';
+import { VerifyUserEmailDto } from './Dtos/verify-user-email.dto';
 import { QueueService } from 'src/queue/queue.service';
 import { LoginUserDto } from './Dtos/login-user.dto';
+import { ResetUserPasswordDto } from './Dtos/reset-user-password.dto';
+import { VerifyResetUserPasswordDto } from './Dtos/verify-reset-user-password.dto';
 
 @Injectable()
 export class AuthService {
@@ -79,14 +81,21 @@ export class AuthService {
     this.queueService.sendVerificationEmail(opt, user.email);
     return user;
   }
-  async verifyUser(verifyUserDto: VerifyUserDto) {
-    const user = await this.usersService.findUserById(verifyUserDto.userId);
+  async verifyUserEmail(verifyUserEmailDto: VerifyUserEmailDto) {
+    const user = await this.usersService.findUserByEmail(
+      verifyUserEmailDto.email,
+    );
     if (!user) throw new BadRequestException('user does not exist');
-    if (user.verified) throw new BadRequestException("user's email is already verified");
+    if (user.verified)
+      throw new BadRequestException("user's email is already verified");
     const opt = await this.findOptByUser(user);
-    if (!opt) throw new BadRequestException('opt does not exist');
+    if (!opt || opt.type != OptType.VERIFY_EMAIL)
+      throw new BadRequestException('opt does not exist');
 
-    if (opt.expiryDate.getDate() > Date.now() || opt.opt != verifyUserDto.opt) {
+    if (
+      opt.expiryDate.getDate() > Date.now() ||
+      opt.opt != verifyUserEmailDto.opt
+    ) {
       throw new UnauthorizedException();
     }
 
@@ -95,7 +104,7 @@ export class AuthService {
     return this.usersService.verifyUser(user);
   }
 
-  async loginUser(loginUserDto: LoginUserDto)  {
+  async loginUser(loginUserDto: LoginUserDto) {
     const user = await this.usersService.findUserByEmail(loginUserDto.email);
     if (user && !user.verified)
       throw new BadRequestException('user email is not verified');
@@ -110,6 +119,44 @@ export class AuthService {
         userId: user.id,
         role: user.role,
       }),
+    };
+  }
+
+  async resetUserPassword(resetUserPasswordDto: ResetUserPasswordDto) {
+    const user = await this.usersService.findUserByEmail(
+      resetUserPasswordDto.email,
+    );
+    if (!user || !user.verified) {
+      throw new UnauthorizedException();
+    }
+    const { opt } = await this.createOpt(user, OptType.RESET_PASSWORD);
+    this.queueService.sendRestPasswordEmail(opt, user.email);
+    return { message: 'opt sent successfully' };
+  }
+
+  async verifyRestUserPassword(
+    verifyResetUserPasswordDto: VerifyResetUserPasswordDto,
+  ) {
+    const user = await this.usersService.findUserByEmail(
+      verifyResetUserPasswordDto.email,
+    );
+    if (!user) throw new BadRequestException('user does not exist');
+    const opt = await this.findOptByUser(user);
+    if (
+      !opt ||
+      opt.opt != verifyResetUserPasswordDto.opt ||
+      opt.type != OptType.RESET_PASSWORD ||
+      opt.expiryDate.getDate() > Date.now()
+    )
+      throw new UnauthorizedException();
+    const hashedPassword = await bcrypt.hash(
+      verifyResetUserPasswordDto.password,
+      10,
+    );
+    this.removeOpt(opt);
+    await this.usersService.updateUserPassword(user, hashedPassword);
+    return {
+      message: 'password reset successfully',
     };
   }
 }

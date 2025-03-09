@@ -26,6 +26,7 @@ export class UsersService {
     });
     return this.userRepository.save(user);
   }
+
   findUserByEmail(email: string) {
     if (!email) return null;
     return this.userRepository.findOne({ where: { email } });
@@ -37,6 +38,11 @@ export class UsersService {
   }
   verifyUser(user: User) {
     user.verified = true;
+    return this.userRepository.save(user);
+  }
+
+  updateUserPassword(user: User, newPassword: string) {
+    user.password = newPassword;
     return this.userRepository.save(user);
   }
 }

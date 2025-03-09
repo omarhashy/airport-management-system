@@ -22,14 +22,20 @@ type Token {
   token: String!
 }
 
+type Message {
+  message: String!
+}
+
 type Query {
   sayHello: String!
 }
 
 type Mutation {
   registerUser(userData: RegisterUserDto!): User!
-  verifyUserEmail(optData: VerifyUserDto!): User!
+  verifyUserEmail(optData: VerifyUserEmailDto!): User!
   loginUser(credentials: LoginUserDto!): Token!
+  resetUserPassword(userData: ResetUserPasswordDto!): Message!
+  verifyResetUserPassword(credentials: VerifyResetUserPasswordDto!): Message!
 }
 
 input RegisterUserDto {
@@ -40,12 +46,22 @@ input RegisterUserDto {
   role: UserRole
 }
 
-input VerifyUserDto {
-  userId: Int!
+input VerifyUserEmailDto {
+  email: String!
   opt: String!
 }
 
 input LoginUserDto {
   email: String!
+  password: String!
+}
+
+input ResetUserPasswordDto {
+  email: String!
+}
+
+input VerifyResetUserPasswordDto {
+  email: String!
+  opt: String!
   password: String!
 }

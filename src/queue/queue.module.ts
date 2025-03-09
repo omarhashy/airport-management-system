@@ -25,3 +25,4 @@ import { SendGridService } from './sendgrid.service';
   ],
 })
 export class QueueModule {}
+

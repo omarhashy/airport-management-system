@@ -24,7 +24,7 @@ type Query {
 
 type Mutation {
   registerUser(userData: RegisterUserDto!): User!
-  verifyUser(optData: VerifyUserDto!): User!
+  verifyUserEmail(optData: VerifyUserDto!): User!
 }
 
 input RegisterUserDto {

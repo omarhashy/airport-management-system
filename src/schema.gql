@@ -18,6 +18,10 @@ enum UserRole {
   PASSENGER
 }
 
+type Token {
+  token: String!
+}
+
 type Query {
   sayHello: String!
 }
@@ -25,6 +29,7 @@ type Query {
 type Mutation {
   registerUser(userData: RegisterUserDto!): User!
   verifyUserEmail(optData: VerifyUserDto!): User!
+  loginUser(credentials: LoginUserDto!): Token!
 }
 
 input RegisterUserDto {
@@ -38,4 +43,9 @@ input RegisterUserDto {
 input VerifyUserDto {
   userId: Int!
   opt: String!
+}
+
+input LoginUserDto {
+  email: String!
+  password: String!
 }

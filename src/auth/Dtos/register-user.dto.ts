@@ -31,7 +31,6 @@ export class RegisterUserDto {
   @IsEmail()
   @Transform(({ value }) => value.trim())
   @Field()
-  @Field()
   email: string;
 
   @IsString()

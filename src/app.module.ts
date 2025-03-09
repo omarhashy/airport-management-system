@@ -57,8 +57,8 @@ import { QueueModule } from './queue/queue.module';
             Booking,
           ],
           database: config.get('POSTGRES_DB'),
-          synchronize: true,
-          dropSchema: true,
+          // synchronize: true,
+          // dropSchema: true,
           // logging: true,
         };
       },

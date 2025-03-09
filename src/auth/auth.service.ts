@@ -14,6 +14,7 @@ import { Repository } from 'typeorm';
 import { OptType } from 'src/enums/opt-type.enum';
 import { VerifyUserDto } from './Dtos/verify-user.dto';
 import { QueueService } from 'src/queue/queue.service';
+import { LoginUserDto } from './Dtos/login-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -46,7 +47,7 @@ export class AuthService {
     return this.optRepository.remove(opt);
   }
 
-  async createVerifyEmailOpt(user: User) {
+  async createOpt(user: User, type: OptType) {
     let opt = await this.findOptByUser(user);
     if (opt) {
       if (opt.expiryDate.getTime() < Date.now()) await this.removeOpt(opt);
@@ -55,7 +56,7 @@ export class AuthService {
     opt = this.optRepository.create({
       user,
       opt: await this.generateUniqueOptString(),
-      type: OptType.VERIFY_EMAIL,
+      type: type,
       expiryDate: new Date(Date.now() + 3 * 60 * 1000),
     });
     return this.optRepository.save(opt);
@@ -74,14 +75,14 @@ export class AuthService {
       hashedPassword,
       registerUserDto.role,
     );
-    const { opt } = await this.createVerifyEmailOpt(user);
+    const { opt } = await this.createOpt(user, OptType.VERIFY_EMAIL);
     this.queueService.sendVerificationEmail(opt, user.email);
     return user;
   }
   async verifyUser(verifyUserDto: VerifyUserDto) {
     const user = await this.usersService.findUserById(verifyUserDto.userId);
     if (!user) throw new BadRequestException('user does not exist');
-    if (user.verified) throw new BadRequestException();
+    if (user.verified) throw new BadRequestException("user's email is already verified");
     const opt = await this.findOptByUser(user);
     if (!opt) throw new BadRequestException('opt does not exist');
 
@@ -92,5 +93,23 @@ export class AuthService {
     user.verified = true;
     await this.removeOpt(opt);
     return this.usersService.verifyUser(user);
+  }
+
+  async loginUser(loginUserDto: LoginUserDto)  {
+    const user = await this.usersService.findUserByEmail(loginUserDto.email);
+    if (user && !user.verified)
+      throw new BadRequestException('user email is not verified');
+    if (!user) throw new UnauthorizedException('invalid credentials');
+    const passwordMatch = await bcrypt.compare(
+      loginUserDto.password,
+      user.password,
+    );
+    if (!passwordMatch) throw new UnauthorizedException('invalid credentials');
+    return {
+      token: this.jwtService.sign({
+        userId: user.id,
+        role: user.role,
+      }),
+    };
   }
 }

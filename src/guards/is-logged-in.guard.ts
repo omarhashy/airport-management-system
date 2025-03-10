@@ -32,7 +32,7 @@ export class IsLoggedIn implements CanActivate {
       const user = await this.authService.getUserById(decoded.userId);
       console.log(user);
 
-      if (!user) throw new Error();
+      if (!user || !user.verified) throw new Error();
       const requiredRole = this.reflector.get<UserRole>(
         'role',
         context.getHandler(),

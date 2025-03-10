@@ -3,11 +3,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { UserRole } from 'src/enums/user-roles.enum';
+import { Admin } from './entities/admin.entity';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
+    @InjectRepository(Admin) private adminRepository: Repository<Admin>,
   ) {}
 
   createUser(
@@ -27,6 +29,23 @@ export class UsersService {
     return this.userRepository.save(user);
   }
 
+  async createSuperAdmin(email: string, password: string) {
+    let user = this.userRepository.create({
+      email,
+      password,
+      firstName: 'super',
+      lastName: 'admin',
+      role: UserRole.SUPER_ADMIN,
+      verified: true,
+    });
+    user = await this.userRepository.save(user);
+    const admin = await this.adminRepository.create({
+      user,
+      isSuperUser: true,
+    });
+    await this.adminRepository.save(admin);
+    return user;
+  }
   findUserByEmail(email: string) {
     if (!email) return null;
     return this.userRepository.findOne({ where: { email } });

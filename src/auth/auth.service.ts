@@ -83,9 +83,8 @@ export class AuthService {
 
   async registerUser(registerUserDto: RegisterUserDto): Promise<User> {
     if (
-      registerUserDto.role == UserRole.SUPER_ADMIN &&
-      registerUserDto.email !=
-        this.configService.getOrThrow('SUPER_ADMIN_EMAIL')
+      registerUserDto.role == UserRole.SUPER_ADMIN ||
+      registerUserDto.email === this.configService.get('SUPER_ADMIN_EMAIL')
     ) {
       throw new UnauthorizedException();
     }
@@ -107,6 +106,23 @@ export class AuthService {
     this.queueService.removeUserIfNotVerified(user.id);
     return user;
   }
+
+  async seedSuperAdmin() {
+    const email = this.configService.getOrThrow<string>('SUPER_ADMIN_EMAIL');
+    if (await this.usersService.findUserByEmail(email)) {
+      throw new UnauthorizedException('super admin already exist');
+    }
+    const hashedPassword = await bcrypt.hash(
+      this.configService.getOrThrow<string>('SUPER_ADMIN_PASSWORD'),
+      10,
+    );
+    const user = await this.usersService.createSuperAdmin(
+      email,
+      hashedPassword,
+    );
+    return user;
+  }
+
   async verifyUserEmail(verifyUserEmailDto: VerifyUserEmailDto) {
     const user = await this.usersService.findUserByEmail(
       verifyUserEmailDto.email,

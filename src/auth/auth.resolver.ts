@@ -26,6 +26,10 @@ export class AuthResolver {
   }
 
   @Mutation((returns) => User)
+  seedAdmin() {
+    return this.authService.seedSuperAdmin();
+  }
+  @Mutation((returns) => User)
   registerUser(@Args('userData') registerUserDto: RegisterUserDto) {
     return this.authService.registerUser(registerUserDto);
   }

@@ -20,7 +20,7 @@ export class Admin {
   @JoinColumn()
   airport: Airport;
 
-  @OneToOne(() => User, { onDelete: 'CASCADE' })
+  @OneToOne(() => User, (user) => user.admin, { onDelete: 'CASCADE' })
   @JoinColumn()
   user: User;
 }

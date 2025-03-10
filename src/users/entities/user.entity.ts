@@ -2,6 +2,7 @@ import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Otp } from 'src/auth/entities/otp.entity';
 import { UserRole } from 'src/enums/user-roles.enum';
 import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Admin } from './admin.entity';
 
 @Entity()
 @ObjectType()
@@ -33,6 +34,9 @@ export class User {
   @Field()
   verified: boolean;
 
-  @OneToOne(() => Otp, (otp => otp.user))
+  @OneToOne(() => Otp, (otp) => otp.user)
   otp?: Otp;
+
+  @OneToOne(() => Admin, (admin) => admin.user)
+  admin?: Admin;
 }

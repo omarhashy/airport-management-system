@@ -31,6 +31,7 @@ type Query {
 }
 
 type Mutation {
+  seedAdmin: User!
   registerUser(userData: RegisterUserDto!): User!
   verifyUserEmail(otpData: VerifyUserEmailDto!): User!
   loginUser(credentials: LoginUserDto!): Token!

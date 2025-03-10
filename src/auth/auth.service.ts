@@ -59,15 +59,13 @@ export class AuthService {
     const generatedOtp = await this.generateUniqueOtpString();
 
     if (type == null) {
-      console.log(type);
       if (!otp) throw new BadRequestException('otp does not exist');
-      if (otp.expiryDate.getTime() > Date.now())
-        throw new BadRequestException('otp is still valid');
       otp.expiryDate = new Date(Date.now() + interval);
       otp.otp = generatedOtp;
       return this.otpRepository.save(otp);
     }
     if (otp) {
+      //reset password
       otp.expiryDate = new Date(Date.now() + interval);
       otp.otp = generatedOtp;
       return this.otpRepository.save(otp);
@@ -145,7 +143,6 @@ export class AuthService {
     return {
       token: this.jwtService.sign({
         userId: user.id,
-        role: user.role,
       }),
     };
   }
@@ -175,7 +172,7 @@ export class AuthService {
       otp.otp != verifyResetUserPasswordDto.otp ||
       otp.type != OtpType.RESET_PASSWORD ||
       otp.expiryDate.getTime() < Date.now()
-    ) {      
+    ) {
       throw new UnauthorizedException();
     }
     const hashedPassword = await bcrypt.hash(
@@ -200,5 +197,9 @@ export class AuthService {
       this.queueService.sendVerificationEmail(otp, user.email);
     }
     return { message: 'otp resent successfully' };
+  }
+
+  async getUserById(id: number) {
+    return this.usersService.findUserById(id);
   }
 }

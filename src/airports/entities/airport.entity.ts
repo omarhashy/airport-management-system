@@ -9,19 +9,25 @@ import { Airline } from './airline.entity';
 import { Flight } from 'src/flights/entities/flight.entity';
 import { Admin } from 'src/users/entities/admin.entity';
 import { StaffMember } from 'src/users/entities/staff-member.entity';
+import { Field, ObjectType } from '@nestjs/graphql';
 
 @Entity()
+@ObjectType()
 export class Airport {
   @PrimaryGeneratedColumn()
+  @Field()
   id: number;
 
   @Column({ unique: true })
+  @Field()
   name: string;
 
   @Column()
+  @Field()
   city: string;
 
   @Column()
+  @Field()
   country: string;
 
   @OneToMany(() => Airline, (airline) => airline.airport)
@@ -34,6 +40,7 @@ export class Airport {
   destinationFlights: Flight[];
 
   @OneToOne(() => Admin, (admin) => admin.airport)
+  // @Field()
   admin: Admin;
 
   @OneToMany(() => StaffMember, (staffMember) => staffMember.airport)

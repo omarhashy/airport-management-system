@@ -18,12 +18,19 @@ enum UserRole {
   PASSENGER
 }
 
-type Token {
-  token: String!
+type Airport {
+  id: Float!
+  name: String!
+  city: String!
+  country: String!
 }
 
 type Message {
   message: String!
+}
+
+type Token {
+  token: String!
 }
 
 type Query {
@@ -38,6 +45,9 @@ type Mutation {
   resetUserPassword(userData: ResetUserPasswordDto!): Message!
   verifyResetUserPassword(credentials: VerifyResetUserPasswordDto!): Message!
   resendOtp(userData: ResendOtpDto!): Message!
+  createAirport(Airport: CreateAirportDto!): Airport!
+  removeAirport(airportId: Int!): Message!
+  updateAirport(airport: UpdateAirportDto!): Airport!
 }
 
 input RegisterUserDto {
@@ -70,4 +80,17 @@ input VerifyResetUserPasswordDto {
 
 input ResendOtpDto {
   email: String!
+}
+
+input CreateAirportDto {
+  name: String!
+  city: String!
+  country: String!
+}
+
+input UpdateAirportDto {
+  id: Float!
+  name: String
+  city: String
+  country: String
 }

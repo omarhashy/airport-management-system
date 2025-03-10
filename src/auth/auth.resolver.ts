@@ -3,9 +3,9 @@ import { AuthService } from './auth.service';
 import { User } from 'src/users/entities/user.entity';
 import { RegisterUserDto } from './Dtos/register-user.dto';
 import { VerifyUserEmailDto } from './Dtos/verify-user-email.dto';
-import { Token } from './graphql/token.model';
+import { Token } from '../graphql/token.model';
 import { LoginUserDto } from './Dtos/login-user.dto';
-import { Message } from './graphql/mesage.model';
+import { Message } from '../graphql/mesage.model';
 import { ResetUserPasswordDto } from './Dtos/reset-user-password.dto';
 import { VerifyResetUserPasswordDto } from './Dtos/verify-reset-user-password.dto';
 import { ResendOtpDto } from './Dtos/resend-otp.dto';
@@ -18,8 +18,8 @@ import { UserRole } from 'src/enums/user-roles.enum';
 export class AuthResolver {
   constructor(private readonly authService: AuthService) {}
 
-  @UseGuards(IsLoggedIn)
-  @Role(UserRole.STAFF_MEMBER)
+  @UseGuards(IsLoggedIn)//only for testing guards
+  // @Role(UserRole.STAFF_MEMBER)
   @Query(() => String)
   sayHello(): string {
     return 'Hello, world!';

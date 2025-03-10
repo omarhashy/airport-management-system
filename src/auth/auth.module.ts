@@ -10,7 +10,7 @@ import { QueueModule } from 'src/queue/queue.module';
 
 @Module({
   providers: [AuthResolver, AuthService],
-  exports: [AuthService],
+  exports: [AuthService, JwtModule],
   imports: [
     TypeOrmModule.forFeature([Otp]),
     UsersModule,

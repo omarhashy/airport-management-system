@@ -30,7 +30,6 @@ export class IsLoggedIn implements CanActivate {
     try {
       const decoded = this.jwtService.verify(token);
       const user = await this.authService.getUserById(decoded.userId);
-      console.log(user);
 
       if (!user || !user.verified) throw new Error();
       const requiredRole = this.reflector.get<UserRole>(

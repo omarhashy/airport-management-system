@@ -63,9 +63,9 @@ import { Otp } from './auth/entities/otp.entity';
         };
       },
     }),
+    AuthModule,
     AirportsModule,
     UsersModule,
-    AuthModule,
     FlightsModule,
     BookingsModule,
     QueueModule,
@@ -74,7 +74,9 @@ import { Otp } from './auth/entities/otp.entity';
   providers: [
     {
       provide: APP_PIPE,
-      useValue: new ValidationPipe(),
+      useValue: new ValidationPipe({
+        transform: true,
+      }),
     },
   ],
 })

@@ -19,6 +19,7 @@ import { ResetUserPasswordDto } from './Dtos/reset-user-password.dto';
 import { VerifyResetUserPasswordDto } from './Dtos/verify-reset-user-password.dto';
 import { UserRole } from 'src/enums/user-roles.enum';
 import { ConfigService } from '@nestjs/config';
+import { ResendOtpDto } from './Dtos/resend-otp.dto';
 
 @Injectable()
 export class AuthService {
@@ -52,18 +53,33 @@ export class AuthService {
     return this.otpRepository.remove(otp);
   }
 
-  async createOtp(user: User, type: OtpType) {
+  async createOtp(user: User, type?: OtpType): Promise<Otp> {
     let otp = await this.findOtpByUser(user);
-    if (otp) {
-      if (otp.expiryDate.getTime() < Date.now()) await this.removeOtp(otp);
-      else throw new BadRequestException('otp is still valid');
+    const interval = 3 * 60 * 1000;
+    const generatedOtp = await this.generateUniqueOtpString();
+
+    if (type == null) {
+      console.log(type);
+      if (!otp) throw new BadRequestException('otp does not exist');
+      if (otp.expiryDate.getTime() > Date.now())
+        throw new BadRequestException('otp is still valid');
+      otp.expiryDate = new Date(Date.now() + interval);
+      otp.otp = generatedOtp;
+      return this.otpRepository.save(otp);
     }
+    if (otp) {
+      otp.expiryDate = new Date(Date.now() + interval);
+      otp.otp = generatedOtp;
+      return this.otpRepository.save(otp);
+    }
+
     otp = this.otpRepository.create({
       user,
-      otp: await this.generateUniqueOtpString(),
+      otp: generatedOtp,
       type: type,
-      expiryDate: new Date(Date.now() + 3 * 60 * 1000),
+      expiryDate: new Date(Date.now() + interval),
     });
+
     return this.otpRepository.save(otp);
   }
 
@@ -73,7 +89,6 @@ export class AuthService {
       registerUserDto.email !=
         this.configService.getOrThrow('SUPER_ADMIN_EMAIL')
     ) {
-      0;
       throw new UnauthorizedException();
     }
 
@@ -91,6 +106,7 @@ export class AuthService {
     );
     const { otp } = await this.createOtp(user, OtpType.VERIFY_EMAIL);
     this.queueService.sendVerificationEmail(otp, user.email);
+    this.queueService.removeUserIfNotVerified(user.id);
     return user;
   }
   async verifyUserEmail(verifyUserEmailDto: VerifyUserEmailDto) {
@@ -105,7 +121,7 @@ export class AuthService {
       throw new BadRequestException('otp does not exist');
 
     if (
-      otp.expiryDate.getDate() > Date.now() ||
+      otp.expiryDate.getTime() < Date.now() ||
       otp.otp != verifyUserEmailDto.otp
     ) {
       throw new UnauthorizedException();
@@ -158,9 +174,10 @@ export class AuthService {
       !otp ||
       otp.otp != verifyResetUserPasswordDto.otp ||
       otp.type != OtpType.RESET_PASSWORD ||
-      otp.expiryDate.getDate() > Date.now()
-    )
+      otp.expiryDate.getTime() < Date.now()
+    ) {      
       throw new UnauthorizedException();
+    }
     const hashedPassword = await bcrypt.hash(
       verifyResetUserPasswordDto.password,
       10,
@@ -170,5 +187,18 @@ export class AuthService {
     return {
       message: 'password reset successfully',
     };
+  }
+
+  async resendOtp(resendOtpDto: ResendOtpDto) {
+    const user = await this.usersService.findUserByEmail(resendOtpDto.email);
+    if (!user) throw new BadRequestException('user does not exist');
+    const { otp, type } = await this.createOtp(user);
+    if (type === OtpType.RESET_PASSWORD) {
+      this.queueService.sendRestPasswordEmail(otp, user.email);
+    }
+    if (type === OtpType.VERIFY_EMAIL) {
+      this.queueService.sendVerificationEmail(otp, user.email);
+    }
+    return { message: 'otp resent successfully' };
   }
 }

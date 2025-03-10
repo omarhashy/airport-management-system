@@ -1,6 +1,6 @@
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
-import { SendGridService } from './sendgrid.service';
+import { SendGridService } from '../sendgrid.service';
 
 @Processor('email', { limiter: { duration: 10000, max: 20 } })
 export class EmailProcessor extends WorkerHost {

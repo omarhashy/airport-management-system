@@ -1,13 +1,18 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { QueueService } from './queue.service';
 import { BullModule } from '@nestjs/bullmq';
-import { EmailProcessor } from './email.worker';
+import { EmailProcessor } from './workers/email.worker';
 import { SendGridService } from './sendgrid.service';
+import { UsersModule } from 'src/users/users.module';
+import { AuthModule } from 'src/auth/auth.module';
+import { RemoveUser } from './workers/remove-user.worker';
 
 @Module({
-  providers: [QueueService, EmailProcessor, SendGridService],
+  providers: [QueueService, EmailProcessor, SendGridService, RemoveUser],
   exports: [QueueService],
   imports: [
+    forwardRef(() => AuthModule),
+    UsersModule,
     BullModule.forRoot({
       connection: {
         host: 'redis',
@@ -21,8 +26,7 @@ import { SendGridService } from './sendgrid.service';
         backoff: 3000,
       },
     }),
-    BullModule.registerQueue({ name: 'email' }),
+    BullModule.registerQueue({ name: 'email' }, { name: 'removeUser' }),
   ],
 })
 export class QueueModule {}
-

@@ -45,4 +45,8 @@ export class UsersService {
     user.password = newPassword;
     return this.userRepository.save(user);
   }
+
+  RemoveUserById(id: number) {
+    return this.userRepository.delete({ id });
+  }
 }

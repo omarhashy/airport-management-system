@@ -36,6 +36,7 @@ type Mutation {
   loginUser(credentials: LoginUserDto!): Token!
   resetUserPassword(userData: ResetUserPasswordDto!): Message!
   verifyResetUserPassword(credentials: VerifyResetUserPasswordDto!): Message!
+  resendOtp(userData: ResendOtpDto!): Message!
 }
 
 input RegisterUserDto {
@@ -64,4 +65,8 @@ input VerifyResetUserPasswordDto {
   email: String!
   otp: String!
   password: String!
+}
+
+input ResendOtpDto {
+  email: String!
 }

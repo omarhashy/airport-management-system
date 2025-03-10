@@ -57,7 +57,7 @@ import { Otp } from './auth/entities/otp.entity';
             Booking,
           ],
           database: config.get('POSTGRES_DB'),
-          // synchronize: true,
+          synchronize: true,
           // dropSchema: true,
           // logging: true,
         };

@@ -8,6 +8,7 @@ import { LoginUserDto } from './Dtos/login-user.dto';
 import { Message } from './graphql/mesage.model';
 import { ResetUserPasswordDto } from './Dtos/reset-user-password.dto';
 import { VerifyResetUserPasswordDto } from './Dtos/verify-reset-user-password.dto';
+import { ResendOtpDto } from './Dtos/resend-otp.dto';
 
 @Resolver()
 export class AuthResolver {
@@ -44,5 +45,10 @@ export class AuthResolver {
     @Args('credentials') verifyResetUserPasswordDto: VerifyResetUserPasswordDto,
   ) {
     return this.authService.verifyRestUserPassword(verifyResetUserPasswordDto);
+  }
+
+  @Mutation((returns) => Message)
+  resendOtp(@Args('userData') resendOtpDto: ResendOtpDto) {
+    return this.authService.resendOtp(resendOtpDto);
   }
 }

@@ -9,10 +9,17 @@ import { Message } from './graphql/mesage.model';
 import { ResetUserPasswordDto } from './Dtos/reset-user-password.dto';
 import { VerifyResetUserPasswordDto } from './Dtos/verify-reset-user-password.dto';
 import { ResendOtpDto } from './Dtos/resend-otp.dto';
+import { UseGuards } from '@nestjs/common';
+import { IsLoggedIn } from 'src/guards/is-logged-in.guard';
+import { Role } from 'src/decorators/role.decorator';
+import { UserRole } from 'src/enums/user-roles.enum';
 
 @Resolver()
 export class AuthResolver {
   constructor(private readonly authService: AuthService) {}
+
+  @UseGuards(IsLoggedIn)
+  @Role(UserRole.STAFF_MEMBER)
   @Query(() => String)
   sayHello(): string {
     return 'Hello, world!';

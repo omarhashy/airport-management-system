@@ -32,11 +32,14 @@ export class IsLoggedIn implements CanActivate {
       const user = await this.authService.getUserById(decoded.userId);
 
       if (!user || !user.verified) throw new Error();
-      const requiredRole = this.reflector.get<UserRole>(
+      const requiredRole = this.reflector.get<UserRole | UserRole[]>(
         'role',
         context.getHandler(),
       );
-      if (requiredRole && requiredRole != user.role) {
+      if (Array.isArray(requiredRole) && !requiredRole.includes(user.role)) {
+        throw new Error();
+      }
+      if (requiredRole && (requiredRole != user.role)) {
         throw new Error();
       }
       request.user = user;

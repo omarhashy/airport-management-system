@@ -1,4 +1,4 @@
-import { Args, Int, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AirportsService } from './airports.service';
 import { Airport } from './entities/airport.entity';
 import { UseGuards } from '@nestjs/common';
@@ -32,5 +32,10 @@ export class AirportsResolver {
   @Role(UserRole.SUPER_ADMIN)
   updateAirport(@Args('airport') updateAirportDto: UpdateAirportDto) {
     return this.airportsService.updateAirport(updateAirportDto);
+  }
+
+  @Query(() => Airport, { name: 'getAirportById' })
+  getAirportById(@Args('airportId', { type: () => Int }) airportId: number) {
+    return this.airportsService.getAirportById(airportId);
   }
 }

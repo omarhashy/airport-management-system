@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Airport } from './entities/airport.entity';
 import { Repository } from 'typeorm';
@@ -19,7 +19,7 @@ export class AirportsService {
 
   async removeAirport(id: number) {
     const airport = await this.airportRepository.findOne({ where: { id } });
-    if (!airport) throw new BadRequestException('Airport not found');
+    if (!airport) throw new NotFoundException('Airport not found');
     await this.airportRepository.remove(airport);
     return {
       message: 'Airport removed successfully',
@@ -30,8 +30,15 @@ export class AirportsService {
     let airport = await this.airportRepository.findOne({
       where: { id: updateAirportDto.id },
     });
-    if (!airport) throw new BadRequestException('Airport does not exist');
-    airport = { ...airport, ...UpdateAirportDto };
+    if (!airport) throw new NotFoundException('Airport does not exist');
+
+    await this.airportRepository.merge(airport, updateAirportDto);
     return this.airportRepository.save(airport);
+  }
+
+  async getAirportById(id: number) {
+    const airport = this.airportRepository.findOne({ where: { id } });
+    if (!airport) throw new NotFoundException('Airport does not exist');
+    return airport;
   }
 }

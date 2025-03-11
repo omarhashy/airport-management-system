@@ -34,7 +34,7 @@ type Token {
 }
 
 type Query {
-  sayHello: String!
+  getAirportById(airportId: Int!): Airport!
 }
 
 type Mutation {

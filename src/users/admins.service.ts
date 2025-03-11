@@ -5,6 +5,7 @@ import { Admin } from './entities/admin.entity';
 import { AirportsService } from 'src/airports/airports.service';
 import { UsersService } from './users.service';
 import { UserRole } from 'src/enums/user-roles.enum';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class AdminsService {
@@ -24,7 +25,6 @@ export class AdminsService {
       user,
       airport,
     });
-
     try {
       admin = await this.adminRepository.save(admin);
     } catch (error) {
@@ -32,8 +32,17 @@ export class AdminsService {
         'each admin should be assigned only to one airport',
       );
     }
-    console.log(admin);
 
     return admin;
+  }
+
+  findByUser(user: User) {
+    
+    return this.adminRepository.findOne({
+      where: {
+      user,
+      },
+      relations: ['airport'],
+    });
   }
 }

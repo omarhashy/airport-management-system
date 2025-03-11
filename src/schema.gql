@@ -25,6 +25,12 @@ enum UserRole {
   PASSENGER
 }
 
+type Airline {
+  id: Float!
+  name: String!
+  airport: Airport!
+}
+
 type Airport {
   id: Float!
   name: String!
@@ -53,9 +59,11 @@ type Mutation {
   verifyResetUserPassword(credentials: VerifyResetUserPasswordDto!): Message!
   resendOtp(userData: ResendOtpDto!): Message!
   assignAdminToAnAirport(adminEmail: String!, airportId: Int!): Admin!
-  createAirport(Airport: CreateAirportDto!): Airport!
+  createAirport(airport: CreateAirportDto!): Airport!
   removeAirport(airportId: Int!): Message!
   updateAirport(airport: UpdateAirportDto!): Airport!
+  createAirline(airline: CreateAirlineDto!): Airline!
+  removeAirline(airlineId: Int!): Message!
 }
 
 input RegisterUserDto {
@@ -101,4 +109,8 @@ input UpdateAirportDto {
   name: String
   city: String
   country: String
+}
+
+input CreateAirlineDto {
+  name: String!
 }

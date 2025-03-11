@@ -16,7 +16,7 @@ export class AirportsResolver {
   @Mutation((returns) => Airport)
   @UseGuards(IsLoggedIn)
   @Role(UserRole.SUPER_ADMIN)
-  createAirport(@Args('Airport') createAirportDto: CreateAirportDto) {
+  createAirport(@Args('airport') createAirportDto: CreateAirportDto) {
     return this.airportsService.createAirport(createAirportDto);
   }
 

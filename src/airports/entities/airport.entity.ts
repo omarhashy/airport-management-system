@@ -40,7 +40,6 @@ export class Airport {
   destinationFlights: Flight[];
 
   @OneToOne(() => Admin, (admin) => admin.airport)
-  // @Field()
   admin: Admin;
 
   @OneToMany(() => StaffMember, (staffMember) => staffMember.airport)

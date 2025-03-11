@@ -16,6 +16,6 @@ import { AuthModule } from 'src/auth/auth.module';
     forwardRef(() => AirportsModule),
     forwardRef(() => AuthModule),
   ],
-  exports: [UsersService],
+  exports: [UsersService, AdminsService],
 })
 export class UsersModule {}

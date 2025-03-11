@@ -1,4 +1,4 @@
-import { Args, Int, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Int, Query, Mutation, Resolver } from '@nestjs/graphql';
 import { AirlinesService } from './airlines.service';
 import { Airline } from './entities/airline.entity';
 import { UseGuards } from '@nestjs/common';
@@ -9,6 +9,7 @@ import { Role } from 'src/decorators/role.decorator';
 import { CurrentUser } from 'src/decorators/current-user.decorator';
 import { User } from 'src/users/entities/user.entity';
 import { Message } from 'src/graphql/mesage.model';
+import { UpdateAirlineDto } from './dtos/update-airline.dto';
 
 @Resolver(() => Airline)
 export class AirlinesResolver {
@@ -31,8 +32,21 @@ export class AirlinesResolver {
     @Args('airlineId', { type: () => Int }) airlineId: number,
     @CurrentUser() user: User,
   ) {
-    console.log(airlineId);
-
     return this.airlinesService.removeAirline(airlineId, user);
+  }
+
+  @Mutation((returns) => Airline)
+  @UseGuards(IsLoggedIn)
+  @Role(UserRole.ADMIN)
+  updateAirline(
+    @Args('airline') updateAirlineDto: UpdateAirlineDto,
+    @CurrentUser() user: User,
+  ) {
+    return this.airlinesService.updateAirline(updateAirlineDto, user);
+  }
+
+  @Query(() => Airline, { name: 'getAirlineById' })
+  getAirlineById(@Args('airlineId', { type: () => Int }) airlineId: number) {
+    return this.airlinesService.getAirlineById(airlineId);
   }
 }

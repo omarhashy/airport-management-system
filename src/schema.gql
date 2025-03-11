@@ -48,6 +48,7 @@ type Token {
 
 type Query {
   getAirportById(airportId: Int!): Airport!
+  getAirlineById(airlineId: Int!): Airline!
 }
 
 type Mutation {
@@ -64,6 +65,7 @@ type Mutation {
   updateAirport(airport: UpdateAirportDto!): Airport!
   createAirline(airline: CreateAirlineDto!): Airline!
   removeAirline(airlineId: Int!): Message!
+  updateAirline(airline: UpdateAirlineDto!): Airline!
 }
 
 input RegisterUserDto {
@@ -105,7 +107,7 @@ input CreateAirportDto {
 }
 
 input UpdateAirportDto {
-  id: Float!
+  id: Int!
   name: String
   city: String
   country: String
@@ -113,4 +115,9 @@ input UpdateAirportDto {
 
 input CreateAirlineDto {
   name: String!
+}
+
+input UpdateAirlineDto {
+  id: Int!
+  name: String
 }

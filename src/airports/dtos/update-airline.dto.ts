@@ -1,15 +1,15 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
 import { Transform } from 'class-transformer';
 import {
-  IsInt,
   IsNotEmpty,
-  IsOptional,
+  IsInt,
   IsString,
+  IsOptional,
   Length,
 } from 'class-validator';
 
 @InputType()
-export class UpdateAirportDto {
+export class UpdateAirlineDto {
   @Field(() => Int)
   @IsNotEmpty()
   @IsInt()
@@ -21,18 +21,4 @@ export class UpdateAirportDto {
   @IsOptional()
   @Transform(({ value }) => value.trim())
   name?: string;
-
-  @Field({ nullable: true })
-  @IsString()
-  @Length(3, 20)
-  @IsOptional()
-  @Transform(({ value }) => value.trim())
-  city?: string;
-
-  @Field({ nullable: true })
-  @IsString()
-  @Length(3, 10)
-  @IsOptional()
-  @Transform(({ value }) => value.trim())
-  country?: string;
 }

@@ -32,12 +32,12 @@ export class AirportsService {
     });
     if (!airport) throw new NotFoundException('Airport does not exist');
 
-    await this.airportRepository.merge(airport, updateAirportDto);
+    this.airportRepository.merge(airport, updateAirportDto);
     return this.airportRepository.save(airport);
   }
 
   async getAirportById(id: number) {
-    const airport = this.airportRepository.findOne({ where: { id } });
+    const airport = await this.airportRepository.findOne({ where: { id } });
     if (!airport) throw new NotFoundException('Airport does not exist');
     return airport;
   }

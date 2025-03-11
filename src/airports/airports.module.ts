@@ -8,5 +8,6 @@ import { AuthModule } from 'src/auth/auth.module';
 @Module({
   imports: [TypeOrmModule.forFeature([Airport]), AuthModule],
   providers: [AirportsResolver, AirportsService],
+  exports: [AirportsService],
 })
 export class AirportsModule {}

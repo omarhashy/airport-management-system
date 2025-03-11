@@ -44,6 +44,7 @@ import { Otp } from './auth/entities/otp.entity';
           password: config.get('POSTGRES_PASSWORD'),
           entities: [
             Airport,
+            Admin,
             Airline,
             Flight,
             User,
@@ -52,7 +53,6 @@ import { Otp } from './auth/entities/otp.entity';
             StaffPermission,
             StaffMember,
             Passenger,
-            Admin,
             Seat,
             Booking,
           ],

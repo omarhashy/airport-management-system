@@ -39,7 +39,7 @@ export class UsersService {
       verified: true,
     });
     user = await this.userRepository.save(user);
-    const admin = await this.adminRepository.create({
+    const admin =  this.adminRepository.create({
       user,
       isSuperUser: true,
     });

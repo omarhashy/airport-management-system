@@ -1,23 +1,26 @@
-import { Permissions } from 'src/enums/premessions.enums';
+import { Permissions } from 'src/enums/permissions.enums';
 import {
   Column,
   Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
   Unique,
-
 } from 'typeorm';
-import { staffRole } from './staff-role.entity';
+import { StaffRole } from './staff-role.entity';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 
 @Entity()
+@ObjectType()
 @Unique(['permission', 'staffRole'])
 export class StaffPermission {
   @PrimaryGeneratedColumn()
+  @Field(() => Int)
   id: number;
 
   @Column({ type: 'enum', enum: Permissions })
+  @Field(() => Permissions)
   permission: Permissions;
 
-  @ManyToOne(() => staffRole, (staffRole) => staffRole.staffPermission)
-  staffRole: staffRole;
+  @ManyToOne(() => StaffRole, (staffRole) => staffRole.staffPermission)
+  staffRole: StaffRole;
 }

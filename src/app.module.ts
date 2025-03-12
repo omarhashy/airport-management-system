@@ -10,7 +10,7 @@ import { Airport } from './airports/entities/airport.entity';
 import { Airline } from './airports/entities/airline.entity';
 import { Flight } from './flights/entities/flight.entity';
 import { User } from './users/entities/user.entity';
-import { staffRole } from './auth/entities/staff-role.entity';
+import { StaffRole } from './auth/entities/staff-role.entity';
 import { StaffPermission } from './auth/entities/staff-permission.entity';
 import { StaffMember } from './users/entities/staff-member.entity';
 import { Passenger } from './users/entities/passenger.entity';
@@ -49,7 +49,7 @@ import { Otp } from './auth/entities/otp.entity';
             Flight,
             User,
             Otp,
-            staffRole,
+            StaffRole,
             StaffPermission,
             StaffMember,
             Passenger,

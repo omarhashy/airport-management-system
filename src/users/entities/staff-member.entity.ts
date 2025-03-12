@@ -10,7 +10,7 @@ import {
 } from 'typeorm';
 import { User } from './user.entity';
 import { Flight } from 'src/flights/entities/flight.entity';
-import { staffRole } from 'src/auth/entities/staff-role.entity';
+import { StaffRole } from 'src/auth/entities/staff-role.entity';
 import { Airport } from 'src/airports/entities/airport.entity';
 
 @Entity()
@@ -25,8 +25,8 @@ export class StaffMember {
   @JoinColumn()
   user: User;
 
-  @ManyToOne(() => staffRole)
-  role: staffRole;
+  @ManyToOne(() => StaffRole)
+  role: StaffRole;
 
   @ManyToMany(() => Flight, (flight) => flight.staffMembers)
   @JoinTable({ name: 'assigned-flights' })

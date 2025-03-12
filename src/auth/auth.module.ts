@@ -7,12 +7,16 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Otp } from './entities/otp.entity';
 import { QueueModule } from 'src/queue/queue.module';
+import { StaffRole } from './entities/staff-role.entity';
+import { staffRolesService } from './staff-role.service';
+import { staffRolesResolver } from './staff-role.resolver';
+import { StaffPermission } from './entities/staff-permission.entity';
 
 @Module({
-  providers: [AuthResolver, AuthService],
+  providers: [AuthResolver, AuthService, staffRolesService, staffRolesResolver],
   exports: [AuthService, JwtModule],
   imports: [
-    TypeOrmModule.forFeature([Otp]),
+    TypeOrmModule.forFeature([Otp, StaffRole, StaffPermission]),
     UsersModule,
     QueueModule,
     JwtModule.registerAsync({

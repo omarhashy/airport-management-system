@@ -25,6 +25,23 @@ enum UserRole {
   PASSENGER
 }
 
+type StaffPermission {
+  id: Int!
+  permission: Permissions!
+}
+
+enum Permissions {
+  MANAGE_FLIGHT_STATUS
+  MANAGE_BOOKING_STATUS
+}
+
+type StaffRole {
+  id: Float!
+  name: String!
+  airport: Airport!
+  staffPermission: [StaffPermission!]!
+}
+
 type Airline {
   id: Float!
   name: String!
@@ -47,6 +64,7 @@ type Token {
 }
 
 type Query {
+  getStaffRoleById(staffRoleId: Int!): StaffRole!
   getAirportById(airportId: Int!): Airport!
   getAirlineById(airlineId: Int!): Airline!
 }
@@ -59,6 +77,11 @@ type Mutation {
   resetUserPassword(userData: ResetUserPasswordDto!): Message!
   verifyResetUserPassword(credentials: VerifyResetUserPasswordDto!): Message!
   resendOtp(userData: ResendOtpDto!): Message!
+  createStaffRole(staffRole: CreateStaffRoleDto!): StaffRole!
+  updateStaffRole(staffRole: UpdateStaffRoleDto!): StaffRole!
+  removeStaffRole(staffRoleId: Int!): Message!
+  addPermission(staffRoleId: Int!, permission: Permissions!): StaffPermission!
+  removePermission(staffRoleId: Int!, permission: Permissions!): Message!
   assignAdminToAnAirport(adminEmail: String!, airportId: Int!): Admin!
   createAirport(airport: CreateAirportDto!): Airport!
   removeAirport(airportId: Int!): Message!
@@ -98,6 +121,15 @@ input VerifyResetUserPasswordDto {
 
 input ResendOtpDto {
   email: String!
+}
+
+input CreateStaffRoleDto {
+  name: String!
+}
+
+input UpdateStaffRoleDto {
+  id: Int!
+  name: String!
 }
 
 input CreateAirportDto {

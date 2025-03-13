@@ -1,4 +1,12 @@
-import { Query, Args, Int, Mutation, Resolver } from '@nestjs/graphql';
+import {
+  Query,
+  Args,
+  Int,
+  Mutation,
+  Resolver,
+  ResolveField,
+  Parent,
+} from '@nestjs/graphql';
 import { StaffRole } from './entities/staff-role.entity';
 import { UseGuards } from '@nestjs/common';
 import { IsLoggedIn } from 'src/guards/is-logged-in.guard';
@@ -12,10 +20,15 @@ import { UpdateStaffRoleDto } from './Dtos/update-staff-role.dto';
 import { Message } from 'src/graphql/mesage.model';
 import { StaffPermission } from './entities/staff-permission.entity';
 import { Permissions } from 'src/enums/permissions.enums';
+import { Airport } from 'src/airports/entities/airport.entity';
+import { AirportsService } from 'src/airports/airports.service';
 
 @Resolver(() => StaffRole)
 export class staffRolesResolver {
-  constructor(private staffRolesService: staffRolesService) {}
+  constructor(
+    private staffRolesService: staffRolesService,
+    private airportService: AirportsService,
+  ) {}
 
   @Mutation((returns) => StaffRole)
   @UseGuards(IsLoggedIn)
@@ -77,8 +90,16 @@ export class staffRolesResolver {
   getStaffRoleById(
     @Args('staffRoleId', { type: () => Int }) staffRoleId: number,
   ) {
-    return this.staffRolesService.getAirlineById(staffRoleId);
+    return this.staffRolesService.getStaffRoleById(staffRoleId);
   }
 
-  //remember to add resolver fields
+  @ResolveField(() => Airport)
+  airport(@Parent() staffRole: StaffRole) {
+    return this.staffRolesService.getAirportByStaffRole(staffRole);
+  }
+
+  @ResolveField(() => StaffPermission)
+  staffPermissions(@Parent() staffRole: StaffRole) {
+    return this.staffRolesService.getPermissionsByStaffRole(staffRole);
+  }
 }

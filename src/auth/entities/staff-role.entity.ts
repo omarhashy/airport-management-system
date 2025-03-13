@@ -29,5 +29,5 @@ export class StaffRole {
     (staffPermission) => staffPermission.staffRole,
   )
   @Field(() => [StaffPermission])
-  staffPermission: StaffPermission[];
+  staffPermissions: StaffPermission[];
 }

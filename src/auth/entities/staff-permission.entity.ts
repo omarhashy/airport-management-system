@@ -21,6 +21,6 @@ export class StaffPermission {
   @Field(() => Permissions)
   permission: Permissions;
 
-  @ManyToOne(() => StaffRole, (staffRole) => staffRole.staffPermission)
+  @ManyToOne(() => StaffRole, (staffRole) => staffRole.staffPermissions)
   staffRole: StaffRole;
 }

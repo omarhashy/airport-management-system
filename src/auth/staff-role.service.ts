@@ -79,7 +79,7 @@ export class staffRolesService {
     return { message: 'staffRole removed successfully' };
   }
 
-  async getAirlineById(id: number) {
+  async getStaffRoleById(id: number) {
     const staffRole = await this.staffRoleRepository.findOne({
       where: {
         id: id,
@@ -89,6 +89,24 @@ export class staffRolesService {
     return staffRole;
   }
 
+  async getAirportByStaffRole(staffRole: StaffRole) {
+    return (
+      await this.staffRoleRepository.findOne({
+        where: { id: staffRole.id },
+        relations: ['airport'],
+      })
+    )?.airport;
+  }
+
+  async getPermissionsByStaffRole(staffRole: StaffRole) {
+
+    return (
+      await this.staffRoleRepository.findOne({
+        where: { id: staffRole.id },
+        relations: ['staffPermissions'],
+      })
+    )?.staffPermissions;
+  }
   async addPermission(
     staffRoleId: number,
     permission: Permissions,

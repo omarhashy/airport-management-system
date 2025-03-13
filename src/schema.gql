@@ -39,7 +39,7 @@ type StaffRole {
   id: Float!
   name: String!
   airport: Airport!
-  staffPermission: [StaffPermission!]!
+  staffPermissions: [StaffPermission!]!
 }
 
 type Airline {

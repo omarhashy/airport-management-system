@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthResolver } from './auth.resolver';
 import { UsersModule } from 'src/users/users.module';
@@ -11,6 +11,7 @@ import { StaffRole } from './entities/staff-role.entity';
 import { staffRolesService } from './staff-role.service';
 import { staffRolesResolver } from './staff-role.resolver';
 import { StaffPermission } from './entities/staff-permission.entity';
+import { AirportsModule } from 'src/airports/airports.module';
 
 @Module({
   providers: [AuthResolver, AuthService, staffRolesService, staffRolesResolver],
@@ -18,6 +19,7 @@ import { StaffPermission } from './entities/staff-permission.entity';
   imports: [
     TypeOrmModule.forFeature([Otp, StaffRole, StaffPermission]),
     UsersModule,
+    forwardRef(() => AirportsModule),
     QueueModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],

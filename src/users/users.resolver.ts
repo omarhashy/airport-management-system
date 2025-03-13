@@ -5,6 +5,7 @@ import { Role } from 'src/decorators/role.decorator';
 import { UseGuards } from '@nestjs/common';
 import { IsLoggedIn } from 'src/guards/is-logged-in.guard';
 import { UserRole } from 'src/enums/user-roles.enum';
+import { Message } from 'src/graphql/mesage.model';
 
 @Resolver(() => Admin)
 export class UsersResolver {
@@ -18,5 +19,11 @@ export class UsersResolver {
     @Args('airportId', { type: () => Int }) airportId: number,
   ) {
     return this.adminsService.assignAdmin(adminEmail, airportId);
+  }
+  @Mutation((returns) => Message)
+  @UseGuards(IsLoggedIn)
+  @Role(UserRole.SUPER_ADMIN)
+  async removeAdmin(@Args('adminEmail') adminEmail: string) {
+    return this.adminsService.removeAdmin(adminEmail);
   }
 }

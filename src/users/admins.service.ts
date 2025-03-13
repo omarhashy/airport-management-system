@@ -16,9 +16,11 @@ export class AdminsService {
   ) {}
   async assignAdmin(userEmail: string, airportId: number) {
     const user = await this.usersService.findUserByEmail(userEmail);
-    if (!user) throw new BadRequestException('user does not exist');
+    if (!user || !user.verified)
+      throw new BadRequestException('user does not exist');
     if (user.role != UserRole.ADMIN)
       throw new BadRequestException('user does not exist');
+
     const airport = await this.airportsService.getAirportById(airportId);
     if (!airport) throw new BadRequestException('user does not exist');
     let admin = this.adminRepository.create({
@@ -36,11 +38,23 @@ export class AdminsService {
     return admin;
   }
 
+  async removeAdmin(email: string) {
+    const user = await this.usersService.findUserByEmail(email);
+    if (!user) throw new BadRequestException('user does not exist');
+    const admin = await this.adminRepository.findOne({
+      where: {
+        user,
+      },
+    });
+    if (!admin) throw new BadRequestException('user does not exist');
+    await this.adminRepository.remove(admin);
+    return { message: 'admin removed successfully' };
+  }
+
   findByUser(user: User) {
-    
     return this.adminRepository.findOne({
       where: {
-      user,
+        user,
       },
       relations: ['airport'],
     });

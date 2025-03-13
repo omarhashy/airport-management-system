@@ -39,7 +39,7 @@ export class IsLoggedIn implements CanActivate {
       if (Array.isArray(requiredRole) && !requiredRole.includes(user.role)) {
         throw new Error();
       }
-      if (requiredRole && (requiredRole != user.role)) {
+      if (requiredRole != null && requiredRole != user.role) {
         throw new Error();
       }
       request.user = user;

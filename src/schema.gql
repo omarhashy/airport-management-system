@@ -83,6 +83,7 @@ type Mutation {
   addPermission(staffRoleId: Int!, permission: Permissions!): StaffPermission!
   removePermission(staffRoleId: Int!, permission: Permissions!): Message!
   assignAdminToAnAirport(adminEmail: String!, airportId: Int!): Admin!
+  removeAdmin(adminEmail: String!): Message!
   createAirport(airport: CreateAirportDto!): Airport!
   removeAirport(airportId: Int!): Message!
   updateAirport(airport: UpdateAirportDto!): Airport!

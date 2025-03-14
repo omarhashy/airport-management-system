@@ -42,6 +42,13 @@ type StaffRole {
   staffPermissions: [StaffPermission!]!
 }
 
+type StaffMember {
+  id: Float!
+  employeeId: String!
+  user: User!
+  role: StaffRole!
+}
+
 type Airline {
   id: Float!
   name: String!
@@ -84,6 +91,8 @@ type Mutation {
   removePermission(staffRoleId: Int!, permission: Permissions!): Message!
   assignAdminToAnAirport(adminEmail: String!, airportId: Int!): Admin!
   removeAdmin(adminEmail: String!): Message!
+  assignStaffMemberToAnAirport(userData: AssignStaffMemberDto!): StaffMember!
+  unassignStaffMemberFromAnAirport(staffMemberEmail: String!): Message!
   createAirport(airport: CreateAirportDto!): Airport!
   removeAirport(airportId: Int!): Message!
   updateAirport(airport: UpdateAirportDto!): Airport!
@@ -131,6 +140,12 @@ input CreateStaffRoleDto {
 input UpdateStaffRoleDto {
   id: Int!
   name: String!
+}
+
+input AssignStaffMemberDto {
+  employeeId: String!
+  userEmail: String!
+  roleId: Int!
 }
 
 input CreateAirportDto {

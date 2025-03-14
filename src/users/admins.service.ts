@@ -17,12 +17,12 @@ export class AdminsService {
   async assignAdmin(userEmail: string, airportId: number) {
     const user = await this.usersService.findUserByEmail(userEmail);
     if (!user || !user.verified)
-      throw new BadRequestException('user does not exist');
+      throw new BadRequestException('admin does not exist');
     if (user.role != UserRole.ADMIN)
-      throw new BadRequestException('user does not exist');
+      throw new BadRequestException('admin does not exist');
 
     const airport = await this.airportsService.getAirportById(airportId);
-    if (!airport) throw new BadRequestException('user does not exist');
+    if (!airport) throw new BadRequestException('admin is already assigned to an airport');
     let admin = this.adminRepository.create({
       user,
       airport,

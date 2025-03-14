@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Airport } from './entities/airport.entity';
-import { Repository } from 'typeorm';
+import { Admin, Repository } from 'typeorm';
 import { CreateAirportDto } from './dtos/create-airport.dto';
 import { UpdateAirportDto } from './dtos/update-airport.dto';
 
@@ -41,4 +41,5 @@ export class AirportsService {
     if (!airport) throw new NotFoundException('Airport does not exist');
     return airport;
   }
+
 }

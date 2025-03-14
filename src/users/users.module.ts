@@ -7,11 +7,14 @@ import { Admin } from './entities/admin.entity';
 import { AdminsService } from './admins.service';
 import { AirportsModule } from 'src/airports/airports.module';
 import { AuthModule } from 'src/auth/auth.module';
+import { StaffMemberService } from './staff-members.service';
+import { StaffMember } from './entities/staff-member.entity';
+import { StaffMemberResolver } from './admins.resolver';
 
 @Module({
-  providers: [UsersResolver, UsersService, AdminsService],
+  providers: [UsersResolver, UsersService, AdminsService, StaffMemberService, StaffMemberResolver],
   imports: [
-    TypeOrmModule.forFeature([User, Admin]),
+    TypeOrmModule.forFeature([User, Admin, StaffMember]),
     forwardRef(() => AirportsModule),
     forwardRef(() => AuthModule),
   ],

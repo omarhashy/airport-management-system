@@ -8,14 +8,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Otp } from './entities/otp.entity';
 import { QueueModule } from 'src/queue/queue.module';
 import { StaffRole } from './entities/staff-role.entity';
-import { staffRolesService } from './staff-role.service';
-import { staffRolesResolver } from './staff-role.resolver';
+import { StaffRolesResolver } from './staff-role.resolver';
 import { StaffPermission } from './entities/staff-permission.entity';
 import { AirportsModule } from 'src/airports/airports.module';
+import { StaffRolesService } from './staff-role.service';
 
 @Module({
-  providers: [AuthResolver, AuthService, staffRolesService, staffRolesResolver],
-  exports: [AuthService, JwtModule],
+  providers: [AuthResolver, AuthService, StaffRolesResolver, StaffRolesService],
+  exports: [AuthService, JwtModule, StaffRolesService],
   imports: [
     TypeOrmModule.forFeature([Otp, StaffRole, StaffPermission]),
     UsersModule,

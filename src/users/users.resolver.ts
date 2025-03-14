@@ -20,6 +20,7 @@ export class UsersResolver {
   ) {
     return this.adminsService.assignAdmin(adminEmail, airportId);
   }
+
   @Mutation((returns) => Message)
   @UseGuards(IsLoggedIn)
   @Role(UserRole.SUPER_ADMIN)

@@ -15,7 +15,7 @@ import { Permissions } from 'src/enums/permissions.enums';
 import { StaffPermission } from './entities/staff-permission.entity';
 
 @Injectable()
-export class staffRolesService {
+export class StaffRolesService {
   constructor(
     @InjectRepository(StaffRole)
     private staffRoleRepository: Repository<StaffRole>,
@@ -99,7 +99,6 @@ export class staffRolesService {
   }
 
   async getPermissionsByStaffRole(staffRole: StaffRole) {
-
     return (
       await this.staffRoleRepository.findOne({
         where: { id: staffRole.id },

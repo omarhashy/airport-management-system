@@ -15,7 +15,7 @@ import { Role } from 'src/decorators/role.decorator';
 import { CreateStaffRoleDto } from './Dtos/staff-role.dto';
 import { CurrentUser } from 'src/decorators/current-user.decorator';
 import { User } from 'src/users/entities/user.entity';
-import { staffRolesService } from './staff-role.service';
+import { StaffRolesService } from './staff-role.service';
 import { UpdateStaffRoleDto } from './Dtos/update-staff-role.dto';
 import { Message } from 'src/graphql/mesage.model';
 import { StaffPermission } from './entities/staff-permission.entity';
@@ -24,9 +24,9 @@ import { Airport } from 'src/airports/entities/airport.entity';
 import { AirportsService } from 'src/airports/airports.service';
 
 @Resolver(() => StaffRole)
-export class staffRolesResolver {
+export class StaffRolesResolver {
   constructor(
-    private staffRolesService: staffRolesService,
+    private staffRolesService: StaffRolesService,
     private airportService: AirportsService,
   ) {}
 

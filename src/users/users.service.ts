@@ -39,7 +39,7 @@ export class UsersService {
       verified: true,
     });
     user = await this.userRepository.save(user);
-    const admin =  this.adminRepository.create({
+    const admin = this.adminRepository.create({
       user,
       isSuperUser: true,
     });
@@ -65,7 +65,7 @@ export class UsersService {
     return this.userRepository.save(user);
   }
 
-  RemoveUserById(id: number) {
+  removeUserById(id: number) {
     return this.userRepository.delete({ id });
   }
 }

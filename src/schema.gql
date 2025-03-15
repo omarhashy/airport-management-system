@@ -53,8 +53,8 @@ type StaffRole {
 type StaffMember {
   id: Float!
   employeeId: String!
-  user: User!
   role: StaffRole!
+  userData: User!
 }
 
 type Flight {
@@ -128,6 +128,7 @@ type Mutation {
   removeAdmin(adminEmail: String!): Message!
   assignStaffMemberToAnAirport(userData: AssignStaffMemberDto!): StaffMember!
   unassignStaffMemberFromAnAirport(staffMemberEmail: String!): Message!
+  assignStaffMemberToAFlight(userEmail: String!, flightNumber: String!): StaffMember!
   createAirport(airport: CreateAirportDto!): Airport!
   removeAirport(airportId: Int!): Message!
   updateAirport(airport: UpdateAirportDto!): Airport!

@@ -20,7 +20,7 @@ export class RemoveUser extends WorkerHost {
 
     const otp = await this.authService.findOtpByUser(user);
     if (user) {
-      this.usersService.RemoveUserById(user.id);
+      this.usersService.removeUserById(user.id);
     }
     if (otp) {
       this.authService.removeOtp(otp);

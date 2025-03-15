@@ -6,6 +6,7 @@ import { Flight } from './entities/flight.entity';
 import { AuthModule } from 'src/auth/auth.module';
 import { AirportsModule } from 'src/airports/airports.module';
 import { UsersModule } from 'src/users/users.module';
+import { BookingsModule } from 'src/bookings/bookings.module';
 
 @Module({
   providers: [FlightsResolver, FlightsService],
@@ -14,6 +15,7 @@ import { UsersModule } from 'src/users/users.module';
     forwardRef(() => AuthModule),
     forwardRef(() => AirportsModule),
     forwardRef(() => UsersModule),
+    BookingsModule,
   ],
   exports: [FlightsService],
 })

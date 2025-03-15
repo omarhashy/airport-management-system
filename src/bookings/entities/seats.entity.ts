@@ -17,6 +17,9 @@ export class Seat {
   @Column({ default: true })
   available: boolean;
 
+  @Column({ unique: true })
+  seatNumber: string;
+
   @ManyToOne(() => Flight, (flight) => flight.seats)
   flight: Flight;
 

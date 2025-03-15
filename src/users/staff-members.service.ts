@@ -14,6 +14,7 @@ import { AdminsService } from './admins.service';
 import { StaffRolesService } from 'src/auth/staff-role.service';
 import { FlightsService } from 'src/flights/flights.service';
 import { AirlinesService } from 'src/airports/airlines.service';
+import { Permissions } from 'src/enums/permissions.enums';
 
 @Injectable()
 export class StaffMemberService {
@@ -24,7 +25,6 @@ export class StaffMemberService {
     private adminsService: AdminsService,
     private staffRolesService: StaffRolesService,
     private flightService: FlightsService,
-    private airlineService: AirlinesService,
   ) {}
 
   async assignStaffMember(
@@ -89,14 +89,61 @@ export class StaffMemberService {
     }
     const staffMember = await this.staffMemberRepository.findOne({
       where: { user: staffUser },
-      relations: ['flights', 'airport'],
+      relations: ['assignedFlights', 'airport', 'role.staffPermissions'],
     });
+
+    if (!staffMember || staffMember.airport.id != admin.airport.id) {
+      throw new BadRequestException(
+        "staff user user is not a staff member to the admin's airport",
+      );
+    }
+
+    if (
+      !staffMember?.role.staffPermissions.some(
+        (staffPermission) =>
+          staffPermission.permission === Permissions.ASSIGNED_TO_A_FLIGHT,
+      )
+    ) {
+      throw new BadRequestException(
+        'staffMember can not be assigned to a flight',
+      );
+    }
     if (staffMember?.airport.id != admin.airport.id) {
       throw new BadRequestException(
         "staff user does not assigned to the admin's airport",
       );
     }
+    for (const assignedFlight of staffMember.assignedFlights) {
+      if (
+        assignedFlight.departureTime.getDate() <=
+          flight.departureTime.getDate() &&
+        assignedFlight.arrivalTime.getDate() >= flight.departureTime.getDate()
+      ) {
+        throw new BadRequestException(
+          'staff member is not available in the provided departure time',
+        );
+      }
+      if (
+        assignedFlight.departureTime.getDate() <=
+          flight.arrivalTime.getDate() &&
+        assignedFlight.arrivalTime.getDate() >= flight.arrivalTime.getDate()
+      ) {
+        throw new BadRequestException(
+          'staff member is not available in the provided arrivalTime time',
+        );
+      }
+    }
+
     staffMember.assignedFlights.push(flight);
     return this.staffMemberRepository.save(staffMember);
+  }
+
+  async getUserByStaffMember(staffMember: StaffMember) {
+    return (
+      await this.staffMemberRepository.findOne({
+        where: { id: staffMember.id },
+        relations: ['user'],
+      })
+    )?.user;
   }
 }

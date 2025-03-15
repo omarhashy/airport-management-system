@@ -11,6 +11,7 @@ import { AirportsService } from 'src/airports/airports.service';
 import { AdminsService } from 'src/users/admins.service';
 import { createFlightDto } from './dtos/create-flight.dto';
 import { User } from 'src/users/entities/user.entity';
+import { SeatsService } from 'src/bookings/seats.service';
 
 @Injectable()
 export class FlightsService {
@@ -19,6 +20,7 @@ export class FlightsService {
     private airlineService: AirlinesService,
     private airportsService: AirportsService,
     private adminService: AdminsService,
+    private seatsService: SeatsService,
   ) {}
 
   async createFlight(createFlightDto: createFlightDto, user: User) {
@@ -53,8 +55,10 @@ export class FlightsService {
       originAirport,
       destinationAirport,
     });
+    await this.flightsRepository.save(flight);
+    await this.seatsService.storeFlightSeats(flight);
 
-    return this.flightsRepository.save(flight);
+    return flight;
   }
 
   async findFlightByFlightNumber(flightNumber: string) {

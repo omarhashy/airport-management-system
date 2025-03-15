@@ -28,6 +28,4 @@ export class AssignStaffMemberDto {
   @IsPositive()
   @Field(() => Int)
   roleId: number;
-
-
 }

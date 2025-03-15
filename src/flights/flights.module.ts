@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { FlightsService } from './flights.service';
 import { FlightsResolver } from './flights.resolver';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -11,10 +11,9 @@ import { UsersModule } from 'src/users/users.module';
   providers: [FlightsResolver, FlightsService],
   imports: [
     TypeOrmModule.forFeature([Flight]),
-    AuthModule,
-    AirportsModule,
-    
-    UsersModule,
+    forwardRef(() => AuthModule),
+    forwardRef(() => AirportsModule),
+    forwardRef(() => UsersModule),
   ],
   exports: [FlightsService],
 })

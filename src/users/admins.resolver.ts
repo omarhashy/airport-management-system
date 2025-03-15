@@ -4,7 +4,7 @@ import { UseGuards } from '@nestjs/common';
 import { IsLoggedIn } from 'src/guards/is-logged-in.guard';
 import { Role } from 'src/decorators/role.decorator';
 import { UserRole } from 'src/enums/user-roles.enum';
-import { AssignStaffMemberDto } from './dtos/assigen-staff-member.dto';
+import { AssignStaffMemberDto } from './dtos/assign-staff-member.dto';
 import { StaffMemberService } from './staff-members.service';
 import { CurrentUser } from 'src/decorators/current-user.decorator';
 import { User } from './entities/user.entity';

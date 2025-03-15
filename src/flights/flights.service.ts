@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Flight } from './entities/flight.entity';
 import { Repository } from 'typeorm';
@@ -38,7 +42,7 @@ export class FlightsService {
         where: { flightNumber: createFlightDto.flightNumber },
       })
     ) {
-      throw new BadRequestException('flight number already exist')
+      throw new BadRequestException('flight number already exist');
     }
     const flight = this.flightsRepository.create({
       flightNumber: createFlightDto.flightNumber,
@@ -51,5 +55,14 @@ export class FlightsService {
     });
 
     return this.flightsRepository.save(flight);
+  }
+
+  async findFlightByFlightNumber(flightNumber: string) {
+    const flight = await this.flightsRepository.findOne({
+      where: { flightNumber },
+      relations: ['airline', 'airline.airport'],
+    });
+    if (!flight) throw new BadRequestException('flight does not exist');
+    return flight;
   }
 }

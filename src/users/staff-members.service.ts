@@ -7,11 +7,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { StaffMember } from './entities/staff-member.entity';
 import { Repository } from 'typeorm';
 import { UsersService } from './users.service';
-import { AssignStaffMemberDto } from './dtos/assigen-staff-member.dto';
+import { AssignStaffMemberDto } from './dtos/assign-staff-member.dto';
 import { UserRole } from 'src/enums/user-roles.enum';
 import { User } from './entities/user.entity';
 import { AdminsService } from './admins.service';
 import { StaffRolesService } from 'src/auth/staff-role.service';
+import { FlightsService } from 'src/flights/flights.service';
+import { AirlinesService } from 'src/airports/airlines.service';
 
 @Injectable()
 export class StaffMemberService {
@@ -21,6 +23,8 @@ export class StaffMemberService {
     private usersService: UsersService,
     private adminsService: AdminsService,
     private staffRolesService: StaffRolesService,
+    private flightService: FlightsService,
+    private airlineService: AirlinesService,
   ) {}
 
   async assignStaffMember(
@@ -67,5 +71,32 @@ export class StaffMemberService {
 
     await this.staffMemberRepository.remove(staffMember);
     return { message: 'staff member has been removed' };
+  }
+
+  async assignStaffMemberToAFlight(
+    email: string,
+    flightNumber: string,
+    currentUser: User,
+  ) {
+    const flight =
+      await this.flightService.findFlightByFlightNumber(flightNumber);
+    const admin = await this.adminsService.findByUser(currentUser);
+    if (admin?.airport.id != flight.airline.airport.id)
+      throw new UnauthorizedException();
+    const staffUser = await this.usersService.findUserByEmail(email);
+    if (!staffUser) {
+      throw new BadRequestException('staff user does not exist');
+    }
+    const staffMember = await this.staffMemberRepository.findOne({
+      where: { user: staffUser },
+      relations: ['flights', 'airport'],
+    });
+    if (staffMember?.airport.id != admin.airport.id) {
+      throw new BadRequestException(
+        "staff user does not assigned to the admin's airport",
+      );
+    }
+    staffMember.assignedFlights.push(flight);
+    return this.staffMemberRepository.save(staffMember);
   }
 }

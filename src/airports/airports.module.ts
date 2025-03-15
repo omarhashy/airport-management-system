@@ -15,7 +15,12 @@ import { AirlinesResolver } from './airlines.resolver';
     AuthModule,
     UsersModule,
   ],
-  providers: [AirportsResolver, AirportsService,AirlinesResolver, AirlinesService],
-  exports: [AirportsService],
+  providers: [
+    AirportsResolver,
+    AirportsService,
+    AirlinesResolver,
+    AirlinesService,
+  ],
+  exports: [AirportsService, AirlinesService],
 })
 export class AirportsModule {}

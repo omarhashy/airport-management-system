@@ -8,6 +8,7 @@ import { Booking } from './entities/bookings.entity';
 import { UsersModule } from 'src/users/users.module';
 import { FlightsModule } from 'src/flights/flights.module';
 import { AuthModule } from 'src/auth/auth.module';
+import { QueueModule } from 'src/queue/queue.module';
 
 @Module({
   providers: [BookingsResolver, BookingsService, SeatsService],
@@ -16,6 +17,7 @@ import { AuthModule } from 'src/auth/auth.module';
     forwardRef(() => FlightsModule),
     forwardRef(() => UsersModule),
     forwardRef(() => AuthModule),
+    forwardRef(() => QueueModule),
   ],
   exports: [SeatsService],
 })

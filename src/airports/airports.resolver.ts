@@ -39,3 +39,4 @@ export class AirportsResolver {
     return this.airportsService.getAirportById(airportId);
   }
 }
+

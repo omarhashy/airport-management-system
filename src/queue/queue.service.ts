@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
+import { BookingStatus } from 'src/enums/booking-status.enum';
 
 @Injectable()
 export class QueueService {
@@ -32,5 +33,23 @@ export class QueueService {
       { userId },
       { delay: 2 * 60 * 60 * 1000 }, // remove a user if not verified in 2 hours
     );
+  }
+
+  manageBookingEmail(
+    flightNumber: string,
+    emailAddress: string,
+    bookingStatus: BookingStatus,
+  ) {
+    if (bookingStatus === BookingStatus.PENDING) {
+      return;
+    }
+    const email = {
+      subject: 'flight booking update',
+      text: `Your booking has been ${bookingStatus === BookingStatus.CANCELLED ? 'cancelled' : 'confirmed'}.\nFlight Number: ${flightNumber}`,
+      to: emailAddress,
+    };
+    console.log(email);
+
+    this.emailQueue.add('password reset email', email);
   }
 }

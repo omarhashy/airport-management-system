@@ -1,4 +1,4 @@
-import {  Module, ValidationPipe } from '@nestjs/common';
+import { Module, ValidationPipe } from '@nestjs/common';
 import { AirportsModule } from './airports/airports.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';

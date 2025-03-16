@@ -22,6 +22,7 @@ export class IsLoggedIn implements CanActivate {
     const request = ctx.getContext().req;
 
     const authHeader = request.headers.authorization;
+
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       throw new UnauthorizedException('unauthorized access');
     }
@@ -30,15 +31,17 @@ export class IsLoggedIn implements CanActivate {
     try {
       const decoded = this.jwtService.verify(token);
       const user = await this.authService.getUserById(decoded.userId);
-
       if (!user || !user.verified) throw new Error();
       const requiredRole = this.reflector.get<UserRole | UserRole[]>(
         'role',
         context.getHandler(),
       );
+      console.log(UserRole[user.role]);
+
       if (Array.isArray(requiredRole) && !requiredRole.includes(user.role)) {
         throw new Error();
       }
+
       if (
         requiredRole != null &&
         !Array.isArray(requiredRole) &&
@@ -47,6 +50,7 @@ export class IsLoggedIn implements CanActivate {
         throw new Error();
       }
       request.user = user;
+
       return true;
     } catch (error) {
       throw new UnauthorizedException('unauthorized access');

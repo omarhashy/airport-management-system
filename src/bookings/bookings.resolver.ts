@@ -1,5 +1,6 @@
 import {
   Args,
+  Int,
   Mutation,
   Parent,
   ResolveField,
@@ -15,6 +16,7 @@ import { CurrentUser } from 'src/decorators/current-user.decorator';
 import { User } from 'src/users/entities/user.entity';
 import { Seat } from './entities/seats.entity';
 import { SeatsService } from './seats.service';
+import { BookingStatus } from 'src/enums/booking-status.enum';
 
 @Resolver(() => Booking)
 export class BookingsResolver {
@@ -33,8 +35,20 @@ export class BookingsResolver {
     return this.bookingsService.bookFlight(flightNumber, user);
   }
 
+  @Mutation(() => Booking)
+  @UseGuards(IsLoggedIn)
+  @Role([UserRole.ADMIN, UserRole.SUPER_ADMIN, UserRole.STAFF_MEMBER])
+  manageBooking(
+    @Args('bookingId', { type: () => Int }) id: number,
+    @Args('bookingStatus', { type: () => BookingStatus }) bookingStatus,
+    @CurrentUser() user: User,
+  ) {
+    return this.bookingsService.mangeBooking(id, bookingStatus, user);
+  }
+
   @ResolveField('seat', () => Seat)
   getSeat(@Parent() booking: Booking) {
+    if(booking.seat) return booking.seat
     return this.seatsService.getSeat(booking);
   }
 }

@@ -4,6 +4,7 @@ import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { UserRole } from 'src/enums/user-roles.enum';
 import { Admin } from './entities/admin.entity';
+import { Passenger } from './entities/passenger.entity';
 
 @Injectable()
 export class UsersService {
@@ -54,6 +55,9 @@ export class UsersService {
   findUserById(id: number) {
     if (!id) return null;
     return this.userRepository.findOne({ where: { id } });
+  }
+  findUserByPassenger(passenger: Passenger) {
+    return this.userRepository.findOne({ where: { passenger } });
   }
   verifyUser(user: User) {
     user.verified = true;

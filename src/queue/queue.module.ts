@@ -12,7 +12,8 @@ import { RemoveUser } from './workers/remove-user.worker';
   exports: [QueueService],
   imports: [
     forwardRef(() => AuthModule),
-    UsersModule,
+    forwardRef(() => UsersModule),
+
     BullModule.forRoot({
       connection: {
         host: 'redis',

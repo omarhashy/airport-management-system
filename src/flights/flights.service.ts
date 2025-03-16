@@ -12,6 +12,7 @@ import { AdminsService } from 'src/users/admins.service';
 import { createFlightDto } from './dtos/create-flight.dto';
 import { User } from 'src/users/entities/user.entity';
 import { SeatsService } from 'src/bookings/seats.service';
+import { StaffMember } from 'src/users/entities/staff-member.entity';
 
 @Injectable()
 export class FlightsService {
@@ -72,5 +73,19 @@ export class FlightsService {
   async bookSeat(flight: Flight) {
     flight.availableSeats--;
     await this.flightsRepository.save(flight);
+  }
+
+  async staffMemberIsAssignedToFlight(
+    staffMember: StaffMember,
+    flight: Flight,
+  ) {
+    return this.flightsRepository.exists({
+      where: {
+        id: flight.id,
+        staffMembers: {
+          id: staffMember.id,
+        }
+      },
+    });
   }
 }

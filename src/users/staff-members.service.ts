@@ -149,4 +149,12 @@ export class StaffMemberService {
       })
     )?.user;
   }
+
+  async getStaffMemberByUser(user: User) {
+
+    return this.staffMemberRepository.findOne({
+      where: { user },
+      relations: ['role', 'role.staffPermissions', 'airport'],
+    });
+  }
 }

@@ -33,13 +33,13 @@ type Passenger {
 }
 
 type Seat {
-  id: Float!
+  id: Int!
   available: Boolean!
   seatNumber: String!
 }
 
 type Booking {
-  id: Float!
+  id: Int!
   status: Float!
   seat: Seat!
 }
@@ -158,6 +158,7 @@ type Mutation {
   updateAirline(airline: UpdateAirlineDto!): Airline!
   createFlight(FlightData: createFlightDto!): Flight!
   bookFlight(flightNumber: String!): Booking!
+  manageBooking(bookingId: Int!, bookingStatus: BookingStatus!): Booking!
 }
 
 input RegisterUserDto {
@@ -248,4 +249,10 @@ input createFlightDto {
   originAirportId: Int!
   destinationAirportId: Int!
   availableSeats: Int!
+}
+
+enum BookingStatus {
+  VERIFIED
+  PENDING
+  CANCELLED
 }

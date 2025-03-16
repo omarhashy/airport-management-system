@@ -7,14 +7,13 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Booking } from './bookings.entity';
-import { Passenger } from 'src/users/entities/passenger.entity';
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 
 @Entity()
 @ObjectType()
 export class Seat {
   @PrimaryGeneratedColumn()
-  @Field()
+  @Field(() => Int)
   id: number;
 
   @Column({ default: true })

@@ -3,6 +3,7 @@ import { Otp } from 'src/auth/entities/otp.entity';
 import { UserRole } from 'src/enums/user-roles.enum';
 import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Admin } from './admin.entity';
+import { Passenger } from './passenger.entity';
 
 @Entity()
 @ObjectType()
@@ -39,4 +40,7 @@ export class User {
 
   @OneToOne(() => Admin, (admin) => admin.user)
   admin?: Admin;
+
+  @OneToOne(() => Passenger, (passenger) => passenger.user)
+  passenger?: Passenger;
 }

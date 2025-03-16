@@ -10,13 +10,13 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Seat } from './seats.entity';
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 
 @Entity()
 @ObjectType()
 export class Booking {
   @PrimaryGeneratedColumn()
-  @Field()
+  @Field(() => Int)
   id: number;
 
   @Column({ type: 'enum', enum: BookingStatus, default: BookingStatus.PENDING })

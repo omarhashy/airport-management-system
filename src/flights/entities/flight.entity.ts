@@ -34,7 +34,11 @@ export class Flight {
   @Field()
   arrivalTime: Date;
 
-  @Column({ type: 'enum', enum: FlightStatus, default: FlightStatus.ON_TIME })
+  @Column({
+    type: 'enum',
+    enum: FlightStatus,
+    default: FlightStatus.ON_TIME,
+  })
   @Field(() => FlightStatus)
   status: FlightStatus;
 

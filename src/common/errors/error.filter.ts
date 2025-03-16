@@ -1,3 +1,4 @@
+
 import { GraphQLFormattedError } from 'graphql';
 
 interface ValidationError {
@@ -12,7 +13,7 @@ interface ExceptionExtensions {
   error?: string;
 }
 
-interface CustomGraphQLError extends GraphQLFormattedError {
+export interface CustomGraphQLError extends GraphQLFormattedError {
   extensions: {
     code: string;
     exception?: ExceptionExtensions;
@@ -24,7 +25,10 @@ interface CustomGraphQLError extends GraphQLFormattedError {
   };
 }
 
-export const customErrorFormatter = (error: CustomGraphQLError) => {
+export const customErrorFormatter = (
+  error: CustomGraphQLError,
+) => {
+
   const originalError = error.extensions?.originalError;
   const exception = error.extensions?.exception;
 

@@ -32,6 +32,18 @@ type Passenger {
   user: User!
 }
 
+type Seat {
+  id: Float!
+  available: Boolean!
+  seatNumber: String!
+}
+
+type Booking {
+  id: Float!
+  status: Float!
+  seat: Seat!
+}
+
 type Interval {
   secs: String
   mins: String
@@ -145,6 +157,7 @@ type Mutation {
   removeAirline(airlineId: Int!): Message!
   updateAirline(airline: UpdateAirlineDto!): Airline!
   createFlight(FlightData: createFlightDto!): Flight!
+  bookFlight(flightNumber: String!): Booking!
 }
 
 input RegisterUserDto {

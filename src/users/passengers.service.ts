@@ -64,4 +64,12 @@ export class PassengersService {
     });
     return this.passengerRepository.save(passenger);
   }
+
+  getPassengerByUser(user: User) {
+    return this.passengerRepository.findOne({
+      where: {
+        user,
+      },
+    });
+  }
 }

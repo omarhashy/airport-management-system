@@ -31,6 +31,6 @@ import { PassengersResolver } from './passengers.resolver';
     forwardRef(() => AuthModule),
     forwardRef(() => FlightsModule),
   ],
-  exports: [UsersService, AdminsService],
+  exports: [UsersService, AdminsService, PassengersService],
 })
 export class UsersModule {}

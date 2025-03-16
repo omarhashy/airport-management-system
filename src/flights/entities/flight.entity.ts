@@ -42,6 +42,7 @@ export class Flight {
     type: 'interval',
     generatedType: 'STORED',
     asExpression: `"arrivalTime" - "departureTime"`,
+    update: false,
   })
   @Field(() => Interval)
   duration: string;

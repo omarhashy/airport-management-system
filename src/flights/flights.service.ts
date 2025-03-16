@@ -69,4 +69,8 @@ export class FlightsService {
     if (!flight) throw new BadRequestException('flight does not exist');
     return flight;
   }
+  async bookSeat(flight: Flight) {
+    flight.availableSeats--;
+    await this.flightsRepository.save(flight);
+  }
 }

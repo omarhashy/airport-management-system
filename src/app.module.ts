@@ -22,6 +22,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { APP_PIPE } from '@nestjs/core';
 import { QueueModule } from './queue/queue.module';
 import { Otp } from './auth/entities/otp.entity';
+import { customErrorFormatter } from './common/errors/error.filter';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { Otp } from './auth/entities/otp.entity';
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: 'src/schema.gql',
+      formatError: customErrorFormatter,
     }),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],

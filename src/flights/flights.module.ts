@@ -16,6 +16,7 @@ import { BookingsModule } from 'src/bookings/bookings.module';
     forwardRef(() => AirportsModule),
     forwardRef(() => UsersModule),
     BookingsModule,
+    
   ],
   exports: [FlightsService],
 })

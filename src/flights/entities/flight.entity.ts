@@ -63,9 +63,7 @@ export class Flight {
   destinationAirport: Airport;
 
   @ManyToMany(() => StaffMember, (staffMember) => staffMember.assignedFlights)
-  @Field(() => [StaffMember])
   staffMembers!: StaffMember[];
-  //  to be added
   @OneToMany(() => Seat, (seat) => seat.flight)
   seats: Seat[];
 

@@ -25,6 +25,13 @@ enum UserRole {
   PASSENGER
 }
 
+type Passenger {
+  id: Float!
+  passportNumber: String!
+  nationality: String!
+  user: User!
+}
+
 type Interval {
   secs: String
   mins: String
@@ -53,6 +60,7 @@ type StaffRole {
 type StaffMember {
   id: Float!
   employeeId: String!
+  user: User!
   role: StaffRole!
   userData: User!
 }
@@ -68,7 +76,6 @@ type Flight {
   airline: Airline!
   originAirport: Airport!
   destinationAirport: Airport!
-  staffMembers: [StaffMember!]!
 }
 
 """
@@ -129,6 +136,8 @@ type Mutation {
   assignStaffMemberToAnAirport(userData: AssignStaffMemberDto!): StaffMember!
   unassignStaffMemberFromAnAirport(staffMemberEmail: String!): Message!
   assignStaffMemberToAFlight(userEmail: String!, flightNumber: String!): StaffMember!
+  addPassengerData(passengerData: AddPassengerDataDto!): Passenger!
+  updatePassengerData(passengerData: UpdatePassengerDataDto!): Passenger!
   createAirport(airport: CreateAirportDto!): Airport!
   removeAirport(airportId: Int!): Message!
   updateAirport(airport: UpdateAirportDto!): Airport!
@@ -183,6 +192,17 @@ input AssignStaffMemberDto {
   employeeId: String!
   userEmail: String!
   roleId: Int!
+}
+
+input AddPassengerDataDto {
+  passportNumber: String!
+  nationality: String!
+}
+
+input UpdatePassengerDataDto {
+  email: String
+  passportNumber: String
+  nationality: String
 }
 
 input CreateAirportDto {

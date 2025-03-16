@@ -27,6 +27,7 @@ export class StaffMember {
 
   @OneToOne(() => User, { onDelete: 'CASCADE' })
   @JoinColumn()
+  @Field()
   user: User;
 
   @ManyToOne(() => StaffRole)

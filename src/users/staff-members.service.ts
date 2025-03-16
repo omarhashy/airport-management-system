@@ -40,6 +40,9 @@ export class StaffMemberService {
     if (user.role != UserRole.STAFF_MEMBER)
       throw new BadRequestException('staff member does not exist');
 
+    if (!user.verified) {
+      throw new BadRequestException('user email is not verified');
+    }
     const staffMemberRole = await this.staffRolesService.getStaffRoleById(
       assignStaffMemberDto.roleId,
     );

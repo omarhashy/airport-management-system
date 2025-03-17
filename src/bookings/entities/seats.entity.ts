@@ -5,12 +5,14 @@ import {
   ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
+  Unique,
 } from 'typeorm';
 import { Booking } from './bookings.entity';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 
 @Entity()
 @ObjectType()
+@Unique(['seatNumber', 'flight'])
 export class Seat {
   @PrimaryGeneratedColumn()
   @Field(() => Int)
@@ -20,7 +22,7 @@ export class Seat {
   @Field()
   available: boolean;
 
-  @Column({ unique: true })
+  @Column()
   @Field()
   seatNumber: string;
 

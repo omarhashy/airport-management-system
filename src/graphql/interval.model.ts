@@ -2,15 +2,15 @@ import { Field, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
 export class Interval {
-  @Field({ nullable: true })
-  secs: string;
+  @Field({ defaultValue: '0' })
+  seconds: string;
 
-  @Field({ nullable: true })
-  mins: string;
+  @Field({ defaultValue: '0' })
+  minutes: string;
 
-  @Field({ nullable: true })
+  @Field({ defaultValue: '0' })
   hours: string;
 
-  @Field({ nullable: true })
+  @Field({ defaultValue: '0' })
   days: string;
 }

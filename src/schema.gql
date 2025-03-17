@@ -45,10 +45,10 @@ type Booking {
 }
 
 type Interval {
-  secs: String
-  mins: String
-  hours: String
-  days: String
+  seconds: String!
+  minutes: String!
+  hours: String!
+  days: String!
 }
 
 type StaffPermission {

@@ -84,22 +84,23 @@ export class BookingsService {
       booking.status === bookingStatus ||
       booking.status === BookingStatus.CANCELLED
     )
-    throw new BadRequestException(
-      'booking status is cancel or booking.status = bookingStatus',
-    );
+      throw new BadRequestException(
+        'booking status is canceled or booking.status = bookingStatus',
+      );
 
     let authorized = false;
     if (user.role === UserRole.SUPER_ADMIN) {
       authorized = true;
     } else if (user.role === UserRole.ADMIN) {
       const admin = await this.adminService.findByUser(user);
+      if (!admin) throw new UnauthorizedException();
       authorized = booking.flight.airline.airport.id === admin?.airport.id;
     } else if (user.role === UserRole.STAFF_MEMBER) {
       const staffMember =
         await this.staffMembersService.getStaffMemberByUser(user);
 
       if (!staffMember) throw new UnauthorizedException();
-      for (const perm of staffMember?.role.staffPermissions || []) {
+      for (const perm of staffMember?.role.staffPermissions) {
         if (perm.permission === Permissions.MANAGE_BOOKING_STATUS) {
           authorized = true;
           break;

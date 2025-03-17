@@ -157,6 +157,7 @@ type Mutation {
   removeAirline(airlineId: Int!): Message!
   updateAirline(airline: UpdateAirlineDto!): Airline!
   createFlight(FlightData: createFlightDto!): Flight!
+  delayFlight(flightData: DelayFlightDto!): Flight!
   bookFlight(flightNumber: String!): Booking!
   manageBooking(bookingId: Int!, bookingStatus: BookingStatus!): Booking!
 }
@@ -249,6 +250,11 @@ input createFlightDto {
   originAirportId: Int!
   destinationAirportId: Int!
   availableSeats: Int!
+}
+
+input DelayFlightDto {
+  flightNumber: String!
+  departureTime: DateTime!
 }
 
 enum BookingStatus {

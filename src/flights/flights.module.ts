@@ -7,6 +7,7 @@ import { AuthModule } from 'src/auth/auth.module';
 import { AirportsModule } from 'src/airports/airports.module';
 import { UsersModule } from 'src/users/users.module';
 import { BookingsModule } from 'src/bookings/bookings.module';
+import { QueueModule } from 'src/queue/queue.module';
 
 @Module({
   providers: [FlightsResolver, FlightsService],
@@ -16,7 +17,7 @@ import { BookingsModule } from 'src/bookings/bookings.module';
     forwardRef(() => AirportsModule),
     forwardRef(() => UsersModule),
     BookingsModule,
-    
+    QueueModule,
   ],
   exports: [FlightsService],
 })

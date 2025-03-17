@@ -36,7 +36,6 @@ export class IsLoggedIn implements CanActivate {
         'role',
         context.getHandler(),
       );
-      console.log(UserRole[user.role]);
 
       if (Array.isArray(requiredRole) && !requiredRole.includes(user.role)) {
         throw new Error();

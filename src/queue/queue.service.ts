@@ -48,8 +48,20 @@ export class QueueService {
       text: `Your booking has been ${bookingStatus === BookingStatus.CANCELLED ? 'cancelled' : 'confirmed'}.\nFlight Number: ${flightNumber}`,
       to: emailAddress,
     };
-    console.log(email);
 
-    this.emailQueue.add('password reset email', email);
+    this.emailQueue.add('booking management', email);
+  }
+
+  delayFlight(flightNumber: string, emailAddress: string, departureDate: Date) {
+    console.log('email');
+
+    const email = {
+      subject: 'your flight has been delayed',
+      text: `Your flight ${flightNumber} has been delayed to ${departureDate.toDateString()} , ${departureDate.toTimeString()}`,
+      to: emailAddress,
+    };
+
+
+    this.emailQueue.add('booking management', email);
   }
 }

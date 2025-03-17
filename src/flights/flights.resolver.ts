@@ -32,4 +32,13 @@ export class FlightsResolver {
   ) {
     return this.flightsService.delayFlight(delayFlightDto, user);
   }
+  @Mutation((returns) => Flight)
+  @UseGuards(IsLoggedIn)
+  @Role([UserRole.ADMIN, UserRole.STAFF_MEMBER, UserRole.SUPER_ADMIN])
+  async cancelFlight(
+    @Args('flightNumber') flightNumber: string,
+    @CurrentUser() user: User,
+  ) {
+    return this.flightsService.cancelFlight(flightNumber, user);
+  }
 }

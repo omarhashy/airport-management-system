@@ -18,6 +18,7 @@ import { StaffMemberService } from 'src/users/staff-members.service';
 import { Permissions } from 'src/enums/permissions.enums';
 import { QueueService } from 'src/queue/queue.service';
 import { UsersService } from 'src/users/users.service';
+import { FlightStatus } from 'src/enums/flight-status.enum';
 
 @Injectable()
 export class BookingsService {
@@ -87,6 +88,8 @@ export class BookingsService {
       throw new BadRequestException(
         'booking status is canceled or booking.status = bookingStatus',
       );
+    if (booking.flight.status === FlightStatus.CANCELLED)
+      throw new BadRequestException('flight is cancelled');
 
     let authorized = false;
     if (user.role === UserRole.SUPER_ADMIN) {
@@ -106,13 +109,10 @@ export class BookingsService {
           break;
         }
       }
-      authorized &&=
-        staffMember?.airport.id === booking.flight.airline.airport.id;
-      authorized &&
-        (await this.flightsService.staffMemberIsAssignedToFlight(
-          staffMember,
-          booking.flight,
-        ));
+      authorized &&= await this.flightsService.staffMemberIsAssignedToFlight(
+        staffMember,
+        booking.flight,
+      );
     }
     if (!authorized) {
       throw new UnauthorizedException();

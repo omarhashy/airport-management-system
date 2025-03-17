@@ -53,14 +53,21 @@ export class QueueService {
   }
 
   delayFlight(flightNumber: string, emailAddress: string, departureDate: Date) {
-    console.log('email');
-
     const email = {
       subject: 'your flight has been delayed',
       text: `Your flight ${flightNumber} has been delayed to ${departureDate.toDateString()} , ${departureDate.toTimeString()}`,
       to: emailAddress,
     };
 
+    this.emailQueue.add('booking management', email);
+  }
+
+  cancelFlight(flightNumber: string, emailAddress: string) {
+    const email = {
+      subject: 'your flight has been delayed',
+      text: `Your flight ${flightNumber} has been cancelled`,
+      to: emailAddress,
+    };
 
     this.emailQueue.add('booking management', email);
   }

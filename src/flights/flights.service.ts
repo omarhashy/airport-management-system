@@ -142,6 +142,9 @@ export class FlightsService {
     const flight = await this.findFlightByFlightNumber(
       delayFlightDto.flightNumber,
     );
+    if (flight.status === FlightStatus.CANCELLED)
+      throw new BadRequestException('flight is cancelled');
+
     if (!(await this.IsAuthorizedToManageFlights(user, flight))) {
       throw new UnauthorizedException();
     }
@@ -173,6 +176,34 @@ export class FlightsService {
         updatedFlight.flightNumber,
         booking.passenger.user.email,
         updatedFlight.departureTime,
+      );
+    });
+
+    return updatedFlight;
+  }
+
+  async cancelFlight(flightNumber: string, user: User) {
+    const flight = await this.findFlightByFlightNumber(flightNumber);
+    if (flight.status === FlightStatus.CANCELLED)
+      throw new BadRequestException('flight is cancelled');
+
+    if (!(await this.IsAuthorizedToManageFlights(user, flight))) {
+      throw new UnauthorizedException();
+    }
+
+    const partialFlight = {
+      id: flight.id,
+      status: FlightStatus.CANCELLED,
+    };
+
+    await this.flightsRepository.save(partialFlight);
+
+    const updatedFlight = await this.findFlightByFlightNumber(flightNumber);
+
+    updatedFlight.bookings.forEach((booking: Booking) => {
+      this.queueService.cancelFlight(
+        updatedFlight.flightNumber,
+        booking.passenger.user.email,
       );
     });
 

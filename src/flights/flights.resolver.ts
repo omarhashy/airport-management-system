@@ -55,7 +55,10 @@ export class FlightsResolver {
     },
     resolve: (payload) => payload.flight,
   })
-  flightUpdated(@Args('flightNumber') flightNumber: string) {
+  async flightUpdated(@Args('flightNumber') flightNumber: string) {
+    const flight =
+      await this.flightsService.findFlightByFlightNumber(flightNumber);
+    
     return this.pubsubService.listenToUpdatedFlight();
   }
 }

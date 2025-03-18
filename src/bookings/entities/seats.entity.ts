@@ -26,7 +26,7 @@ export class Seat {
   @Field()
   seatNumber: string;
 
-  @ManyToOne(() => Flight, (flight) => flight.seats)
+  @ManyToOne(() => Flight, (flight) => flight.seats, { onDelete: 'CASCADE' })
   flight: Flight;
 
   @OneToOne(() => Booking, (booking) => booking.seat)

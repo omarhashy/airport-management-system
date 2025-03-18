@@ -23,6 +23,7 @@ import { APP_PIPE } from '@nestjs/core';
 import { QueueModule } from './queue/queue.module';
 import { Otp } from './auth/entities/otp.entity';
 import { customErrorFormatter } from './common/errors/error.filter';
+import { PubsubModule } from './pubsub/pubsub.module';
 
 @Module({
   imports: [
@@ -34,6 +35,10 @@ import { customErrorFormatter } from './common/errors/error.filter';
       driver: ApolloDriver,
       autoSchemaFile: 'src/schema.gql',
       formatError: customErrorFormatter,
+      subscriptions: {
+        'graphql-ws': true,
+        'subscriptions-transport-ws': true,
+      },
     }),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
@@ -71,6 +76,7 @@ import { customErrorFormatter } from './common/errors/error.filter';
     FlightsModule,
     BookingsModule,
     QueueModule,
+    PubsubModule,
   ],
   controllers: [],
   providers: [

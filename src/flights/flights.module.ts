@@ -8,6 +8,7 @@ import { AirportsModule } from 'src/airports/airports.module';
 import { UsersModule } from 'src/users/users.module';
 import { BookingsModule } from 'src/bookings/bookings.module';
 import { QueueModule } from 'src/queue/queue.module';
+import { PubsubModule } from 'src/pubsub/pubsub.module';
 
 @Module({
   providers: [FlightsResolver, FlightsService],
@@ -18,6 +19,7 @@ import { QueueModule } from 'src/queue/queue.module';
     forwardRef(() => UsersModule),
     BookingsModule,
     QueueModule,
+    PubsubModule,
   ],
   exports: [FlightsService],
 })

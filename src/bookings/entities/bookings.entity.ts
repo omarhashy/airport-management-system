@@ -29,7 +29,7 @@ export class Booking {
   @ManyToOne(() => Passenger, (passenger) => passenger.bookings)
   passenger: Passenger;
 
-  @OneToOne(() => Seat, (seat) => seat.booking)
+  @OneToOne(() => Seat, (seat) => seat.booking, { onDelete: 'CASCADE' })
   @JoinColumn()
   seat: Seat;
 }

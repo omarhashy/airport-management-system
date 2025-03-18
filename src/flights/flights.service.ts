@@ -22,6 +22,7 @@ import { Permissions } from 'src/enums/permissions.enums';
 import { FlightStatus } from 'src/enums/flight-status.enum';
 import { QueueService } from 'src/queue/queue.service';
 import { Booking } from 'src/bookings/entities/bookings.entity';
+import { PubsubService } from 'src/pubsub/pubsub.service';
 @Injectable()
 export class FlightsService {
   constructor(
@@ -33,6 +34,7 @@ export class FlightsService {
     @Inject(forwardRef(() => StaffMemberService))
     private staffMembersService: StaffMemberService,
     private queueService: QueueService,
+    private pubsubService: PubsubService,
   ) {}
 
   async createFlight(createFlightDto: createFlightDto, user: User) {
@@ -171,6 +173,7 @@ export class FlightsService {
       delayFlightDto.flightNumber,
     );
 
+    this.pubsubService.updateFlight(updatedFlight);
     updatedFlight.bookings.forEach((booking: Booking) => {
       this.queueService.delayFlight(
         updatedFlight.flightNumber,
@@ -207,6 +210,7 @@ export class FlightsService {
       );
     });
 
+    this.pubsubService.updateFlight(updatedFlight);
     return updatedFlight;
   }
 }

@@ -27,7 +27,6 @@ import { AirportsService } from 'src/airports/airports.service';
 export class StaffRolesResolver {
   constructor(
     private staffRolesService: StaffRolesService,
-    private airportService: AirportsService,
   ) {}
 
   @Mutation((returns) => StaffRole)
@@ -86,12 +85,6 @@ export class StaffRolesResolver {
     );
   }
 
-  @Query(() => StaffRole)
-  getStaffRoleById(
-    @Args('staffRoleId', { type: () => Int }) staffRoleId: number,
-  ) {
-    return this.staffRolesService.getStaffRoleById(staffRoleId);
-  }
 
   @ResolveField(() => Airport)
   airport(@Parent() staffRole: StaffRole) {

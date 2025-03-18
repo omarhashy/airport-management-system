@@ -1,4 +1,4 @@
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Resolver, Subscription } from '@nestjs/graphql';
 import { FlightsService } from './flights.service';
 import { Flight } from './entities/flight.entity';
 import { UseGuards } from '@nestjs/common';
@@ -9,10 +9,15 @@ import { createFlightDto } from './dtos/create-flight.dto';
 import { CurrentUser } from 'src/decorators/current-user.decorator';
 import { User } from 'src/users/entities/user.entity';
 import { DelayFlightDto } from './dtos/delay-flight.dto';
+import { PubsubService } from 'src/pubsub/pubsub.service';
 
 @Resolver(() => Flight)
 export class FlightsResolver {
-  constructor(private readonly flightsService: FlightsService) {}
+  constructor(
+    private readonly flightsService: FlightsService,
+    private pubsubService: PubsubService,
+  ) {}
+
   @Mutation((returns) => Flight)
   @UseGuards(IsLoggedIn)
   @Role(UserRole.ADMIN)
@@ -40,5 +45,17 @@ export class FlightsResolver {
     @CurrentUser() user: User,
   ) {
     return this.flightsService.cancelFlight(flightNumber, user);
+  }
+
+  @Subscription(() => Flight, {
+    filter: ({ flight }, variables) => {
+      flight.departureTime = new Date(flight.departureTime);
+      flight.arrivalTime = new Date(flight.arrivalTime);
+      return flight.flightNumber === variables.flightNumber;
+    },
+    resolve: (payload) => payload.flight,
+  })
+  flightUpdated(@Args('flightNumber') flightNumber: string) {
+    return this.pubsubService.listenToUpdatedFlight();
   }
 }

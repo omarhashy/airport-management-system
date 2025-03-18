@@ -14,6 +14,7 @@
     "start:prod": "node dist/main"
   },
   "dependencies": {
+    "@graphql-tools/schema": "^10.0.23",
     "@nestjs/apollo": "^13.0.3",
     "@nestjs/bullmq": "^11.0.2",
     "@nestjs/common": "^11.0.1",
@@ -32,11 +33,15 @@
     "class-validator": "^0.14.1",
     "dataloader": "^2.2.3",
     "graphql": "^16.10.0",
+    "graphql-redis-subscriptions": "^2.7.0",
+    "graphql-subscriptions": "^3.0.0",
+    "graphql-ws": "^6.0.4",
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.13.3",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
-    "typeorm": "^0.3.21"
+    "typeorm": "^0.3.21",
+    "ws": "^8.18.1"
   },
   "devDependencies": {
     "@nestjs/cli": "^11.0.0",

@@ -125,7 +125,6 @@ type Token {
 }
 
 type Query {
-  getStaffRoleById(staffRoleId: Int!): StaffRole!
   getAirportById(airportId: Int!): Airport!
   getAirlineById(airlineId: Int!): Airline!
 }
@@ -262,4 +261,8 @@ enum BookingStatus {
   VERIFIED
   PENDING
   CANCELLED
+}
+
+type Subscription {
+  flightUpdated(flightNumber: String!): Flight!
 }

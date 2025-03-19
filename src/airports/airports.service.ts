@@ -54,7 +54,6 @@ export class AirportsService {
       skip: offset,
       take: limit,
     });
-    console.log(airports);
     return airports
     
   }

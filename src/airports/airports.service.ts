@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Airport } from './entities/airport.entity';
-import {  In, Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { CreateAirportDto } from './dtos/create-airport.dto';
 import { UpdateAirportDto } from './dtos/update-airport.dto';
 
@@ -48,13 +48,13 @@ export class AirportsService {
     });
   }
   async getAirports(page: number) {
+    if (!page) page = 1;
     const limit = 10;
     const offset = (page - 1) * limit;
     const airports = await this.airportRepository.find({
       skip: offset,
       take: limit,
     });
-    return airports
-    
+    return airports;
   }
 }

@@ -125,6 +125,8 @@ type Token {
 type Query {
   getAirportById(airportId: Int!): Airport!
   getAllAirports(page: Int): [Airport!]!
+  getAirlineById(id: Int!): Airline!
+  getAirlines(page: Int): [Airline!]!
   flights(filter: GetFlightsDto!): [Flight!]!
 }
 

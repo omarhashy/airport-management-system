@@ -248,6 +248,8 @@ export class FlightsService {
       });
     }
 
+    if (!getFlightsDto.page) getFlightsDto.page = 1;
+
     const flights = await query
       .limit(10)
       .offset((getFlightsDto.page - 1) * 10)

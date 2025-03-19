@@ -68,6 +68,18 @@ export class AirlinesService {
     return airline;
   }
 
+  async getAirlines(page: number) {
+    if (!page) page = 1;
+    const limit = 10;
+    const offset = (page - 1) * limit;
+    const airlines = await this.airlinesRepository.find({
+      take: limit,
+      skip: offset,
+      relations: ['airport'],
+    });
+    return airlines;
+  }
+
   async findAirlinesByIds(ids: number[]) {
     return this.airlinesRepository.find({
       where: { id: In(ids) },

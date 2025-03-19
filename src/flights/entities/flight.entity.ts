@@ -73,4 +73,8 @@ export class Flight {
 
   @OneToMany(() => Booking, (booking) => booking.flight)
   bookings: Booking[];
+
+  airlineId: number;
+  destinationAirportId: number;
+  originAirportAirportId: number;
 }

@@ -23,6 +23,8 @@ import { FlightStatus } from 'src/enums/flight-status.enum';
 import { QueueService } from 'src/queue/queue.service';
 import { Booking } from 'src/bookings/entities/bookings.entity';
 import { PubsubService } from 'src/pubsub/pubsub.service';
+import { GetFlightsDto } from './dtos/get-flights.dto';
+
 @Injectable()
 export class FlightsService {
   constructor(
@@ -212,5 +214,49 @@ export class FlightsService {
 
     this.pubsubService.updateFlight(updatedFlight);
     return updatedFlight;
+  }
+
+  async getManyFlights(getFlightsDto: GetFlightsDto) {
+    if (getFlightsDto.flightNumber) {
+      return [this.findFlightByFlightNumber(getFlightsDto.flightNumber)];
+    }
+    let query = this.flightsRepository
+      .createQueryBuilder('flight')
+      .select('flight.*');
+
+    if (getFlightsDto.airlineId) {
+      query.andWhere('flight.airlineId = :airlineId', {
+        airlineId: getFlightsDto.airlineId,
+      });
+    }
+
+    if (getFlightsDto.departureTime) {
+      query.andWhere('flight.departureTime >= :departureTime', {
+        departureTime: new Date(getFlightsDto.departureTime),
+      });
+    }
+
+    if (getFlightsDto.destinationAirportId) {
+      query.andWhere('flight.destinationAirportId = :destinationAirportId', {
+        destinationAirportId: getFlightsDto.destinationAirportId,
+      });
+    }
+
+    if (getFlightsDto.originAirportId) {
+      query.andWhere('flight.originAirportId = :originAirportId', {
+        originAirportId: getFlightsDto.originAirportId,
+      });
+    }
+
+    const flights = await query
+      .limit(10)
+      .offset((getFlightsDto.page - 1) * 10)
+      .getRawMany();
+
+    flights.forEach((flight) => {
+      flight.status = parseInt(flight.status);
+    });
+    console.log(flights);
+    return flights;
   }
 }

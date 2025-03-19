@@ -99,8 +99,6 @@ enum FlightStatus {
   ON_TIME
   DELAYED
   CANCELLED
-  DEPARTED
-  ARRIVED
 }
 
 type Airline {
@@ -126,7 +124,16 @@ type Token {
 
 type Query {
   getAirportById(airportId: Int!): Airport!
-  getAirlineById(airlineId: Int!): Airline!
+  flights(filter: GetFlightsDto!): [Flight!]!
+}
+
+input GetFlightsDto {
+  flightNumber: String
+  departureTime: DateTime
+  airlineId: ID
+  originAirportId: ID
+  destinationAirportId: ID
+  page: Int! = 1
 }
 
 type Mutation {

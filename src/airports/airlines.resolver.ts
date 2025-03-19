@@ -45,8 +45,4 @@ export class AirlinesResolver {
     return this.airlinesService.updateAirline(updateAirlineDto, user);
   }
 
-  @Query(() => Airline, { name: 'getAirlineById' })
-  getAirlineById(@Args('airlineId', { type: () => Int }) airlineId: number) {
-    return this.airlinesService.getAirlineById(airlineId);
-  }
 }

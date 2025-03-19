@@ -1,4 +1,4 @@
-import { Args, Mutation, Resolver, Subscription } from '@nestjs/graphql';
+import { Query, Args, Mutation, Resolver, Subscription } from '@nestjs/graphql';
 import { FlightsService } from './flights.service';
 import { Flight } from './entities/flight.entity';
 import { UseGuards } from '@nestjs/common';
@@ -10,6 +10,7 @@ import { CurrentUser } from 'src/decorators/current-user.decorator';
 import { User } from 'src/users/entities/user.entity';
 import { DelayFlightDto } from './dtos/delay-flight.dto';
 import { PubsubService } from 'src/pubsub/pubsub.service';
+import { GetFlightsDto } from './dtos/get-flights.dto';
 
 @Resolver(() => Flight)
 export class FlightsResolver {
@@ -56,9 +57,14 @@ export class FlightsResolver {
     resolve: (payload) => payload.flight,
   })
   async flightUpdated(@Args('flightNumber') flightNumber: string) {
-    const flight =
-      await this.flightsService.findFlightByFlightNumber(flightNumber);
-    
+    await this.flightsService.findFlightByFlightNumber(flightNumber);
     return this.pubsubService.listenToUpdatedFlight();
+  }
+
+  @Query(() => [Flight], { name: 'flights' })
+  async getFlights(
+    @Args('filter', { type: () => GetFlightsDto }) filter: GetFlightsDto,
+  ) {
+    return this.flightsService.getManyFlights(filter);
   }
 }

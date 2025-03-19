@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Airport } from './entities/airport.entity';
-import { Admin, In, Repository } from 'typeorm';
+import {  In, Repository } from 'typeorm';
 import { CreateAirportDto } from './dtos/create-airport.dto';
 import { UpdateAirportDto } from './dtos/update-airport.dto';
 
@@ -46,5 +46,16 @@ export class AirportsService {
     return this.airportRepository.find({
       where: { id: In(ids) },
     });
+  }
+  async getAirports(page: number) {
+    const limit = 10;
+    const offset = (page - 1) * limit;
+    const airports = await this.airportRepository.find({
+      skip: offset,
+      take: limit,
+    });
+    console.log(airports);
+    return airports
+    
   }
 }

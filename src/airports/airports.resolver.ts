@@ -38,5 +38,11 @@ export class AirportsResolver {
   getAirportById(@Args('airportId', { type: () => Int }) airportId: number) {
     return this.airportsService.getAirportById(airportId);
   }
-}
 
+  @Query(() => [Airport], { name: 'getAllAirports' })
+  getAllAirports(
+    @Args('page', { type: () => Int, nullable: true }) page: number = 1,
+  ) {
+    return this.airportsService.getAirports(page);
+  }
+}

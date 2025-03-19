@@ -19,6 +19,7 @@ import { Permissions } from 'src/enums/permissions.enums';
 import { QueueService } from 'src/queue/queue.service';
 import { UsersService } from 'src/users/users.service';
 import { FlightStatus } from 'src/enums/flight-status.enum';
+import { C } from 'graphql-ws/dist/common-DY-PBNYy';
 
 @Injectable()
 export class BookingsService {
@@ -57,7 +58,8 @@ export class BookingsService {
     const seat = await this.seatsService.bookSeat(flight);
     if (!seat) throw new BadRequestException('No seats available');
     else await this.flightsService.bookSeat(flight);
-
+    
+    
     const booking = this.bookingRepository.create({
       flight,
       seat,

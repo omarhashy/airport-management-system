@@ -72,7 +72,6 @@ type StaffRole {
 type StaffMember {
   id: Float!
   employeeId: String!
-  user: User!
   role: StaffRole!
   userData: User!
 }

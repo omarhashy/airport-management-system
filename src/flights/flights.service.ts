@@ -94,8 +94,12 @@ export class FlightsService {
     return flight;
   }
   async bookSeat(flight: Flight) {
-    flight.availableSeats--;
-    await this.flightsRepository.save(flight);
+    this.flightsRepository.update(
+      { id: flight.id },
+      {
+        availableSeats: flight.availableSeats - 1,
+      },
+    );
   }
 
   async staffMemberIsAssignedToFlight(

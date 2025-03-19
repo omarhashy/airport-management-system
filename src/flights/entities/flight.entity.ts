@@ -76,5 +76,5 @@ export class Flight {
 
   airlineId: number;
   destinationAirportId: number;
-  originAirportAirportId: number;
+  originAirportId: number;
 }

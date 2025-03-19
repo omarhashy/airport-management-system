@@ -256,7 +256,6 @@ export class FlightsService {
     flights.forEach((flight) => {
       flight.status = parseInt(flight.status);
     });
-    console.log(flights);
     return flights;
   }
 }

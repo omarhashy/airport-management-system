@@ -9,6 +9,7 @@ import { UsersModule } from 'src/users/users.module';
 import { BookingsModule } from 'src/bookings/bookings.module';
 import { QueueModule } from 'src/queue/queue.module';
 import { PubsubModule } from 'src/pubsub/pubsub.module';
+import { DataloaderModule } from 'src/dataloader/dataloader.module';
 
 @Module({
   providers: [FlightsResolver, FlightsService],
@@ -20,6 +21,7 @@ import { PubsubModule } from 'src/pubsub/pubsub.module';
     BookingsModule,
     QueueModule,
     PubsubModule,
+    DataloaderModule,
   ],
   exports: [FlightsService],
 })

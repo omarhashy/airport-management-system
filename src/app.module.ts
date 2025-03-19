@@ -24,6 +24,7 @@ import { QueueModule } from './queue/queue.module';
 import { Otp } from './auth/entities/otp.entity';
 import { customErrorFormatter } from './common/errors/error.filter';
 import { PubsubModule } from './pubsub/pubsub.module';
+import { DataloaderModule } from './dataloader/dataloader.module';
 
 @Module({
   imports: [
@@ -77,6 +78,7 @@ import { PubsubModule } from './pubsub/pubsub.module';
     BookingsModule,
     QueueModule,
     PubsubModule,
+    DataloaderModule,
   ],
   controllers: [],
   providers: [

@@ -7,7 +7,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Airline } from './entities/airline.entity';
 import { CreateAirlineDto } from './dtos/create-airline.dto';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { AdminsService } from 'src/users/admins.service';
 import { User } from 'src/users/entities/user.entity';
 import { UpdateAirlineDto } from './dtos/update-airline.dto';
@@ -66,5 +66,12 @@ export class AirlinesService {
     });
     if (!airline) throw new NotFoundException('airline not found');
     return airline;
+  }
+
+  async findAirlinesByIds(ids: number[]) {
+    return this.airlinesRepository.find({
+      where: { id: In(ids) },
+      relations: ['airport'],
+    });
   }
 }

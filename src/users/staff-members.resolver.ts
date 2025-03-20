@@ -4,6 +4,7 @@ import {
   Parent,
   ResolveField,
   Resolver,
+  Query,
 } from '@nestjs/graphql';
 import { StaffMember } from './entities/staff-member.entity';
 import { UseGuards } from '@nestjs/common';
@@ -15,6 +16,7 @@ import { StaffMemberService } from './staff-members.service';
 import { CurrentUser } from 'src/decorators/current-user.decorator';
 import { User } from './entities/user.entity';
 import { Message } from 'src/graphql/mesage.model';
+import { Flight } from 'src/flights/entities/flight.entity';
 
 @Resolver(() => StaffMember)
 export class StaffMemberResolver {
@@ -60,5 +62,12 @@ export class StaffMemberResolver {
   @ResolveField('userData', () => User)
   getStaffMemberUser(@Parent() staffMember: StaffMember) {
     return this.staffMembersService.getUserByStaffMember(staffMember);
+  }
+
+  @Query(() => [Flight])
+  @UseGuards(IsLoggedIn)
+  @Role(UserRole.STAFF_MEMBER)
+  getAssignedFlights(@CurrentUser() user: User) {
+    return this.staffMembersService.getAssignedFlights(user);
   }
 }

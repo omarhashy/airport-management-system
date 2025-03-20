@@ -76,7 +76,8 @@ export class FlightsResolver {
 
   @Query(() => [Flight], { name: 'flights' })
   async getFlights(
-    @Args('filter', { type: () => GetFlightsDto }) filter: GetFlightsDto,
+    @Args('filter', { type: () => GetFlightsDto, nullable: true })
+    filter: GetFlightsDto,
   ) {
     return this.flightsService.getManyFlights(filter);
   }

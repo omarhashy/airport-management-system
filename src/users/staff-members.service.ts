@@ -15,6 +15,8 @@ import { StaffRolesService } from 'src/auth/staff-role.service';
 import { FlightsService } from 'src/flights/flights.service';
 import { AirlinesService } from 'src/airports/airlines.service';
 import { Permissions } from 'src/enums/permissions.enums';
+import { CurrentUser } from 'src/decorators/current-user.decorator';
+import { C } from 'graphql-ws/dist/common-DY-PBNYy';
 
 @Injectable()
 export class StaffMemberService {
@@ -151,10 +153,24 @@ export class StaffMemberService {
   }
 
   async getStaffMemberByUser(user: User) {
-
     return this.staffMemberRepository.findOne({
       where: { user },
       relations: ['role', 'role.staffPermissions', 'airport'],
     });
+  }
+
+  async getAssignedFlights(@CurrentUser() user: User) {
+    const staffMember = await this.staffMemberRepository.findOne({
+      where: { user },
+      relations: [
+        'assignedFlights',
+        'assignedFlights.airline',
+        'assignedFlights.airline.airport',
+        'assignedFlights.originAirport',
+        'assignedFlights.destinationAirport',
+      ],
+    });
+
+    return staffMember?.assignedFlights;
   }
 }

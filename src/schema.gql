@@ -121,8 +121,16 @@ type Token {
   token: String!
 }
 
+type BookingModel {
+  id: Int!
+  status: Float!
+  flight: Flight!
+  seat: Seat!
+}
+
 type Query {
   getAssignedFlights: [Flight!]!
+  getPassengerBookings: [BookingModel!]!
   getAirportById(airportId: Int!): Airport!
   getAllAirports(page: Int): [Airport!]!
   getAirlineById(id: Int!): Airline!

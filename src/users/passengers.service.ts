@@ -72,4 +72,21 @@ export class PassengersService {
       },
     });
   }
+
+  async getPassengerBookings(user: User) {
+    const passenger = await this.passengerRepository.findOne({
+      where: { user },
+      relations: [
+        'bookings',
+        'bookings.seat',
+        'bookings.flight',
+        'bookings.flight.airline',
+        'bookings.flight.airline.airport',
+        'bookings.flight.originAirport',
+        'bookings.flight.destinationAirport',
+      ],
+    });
+    return passenger?.bookings;
+    
+  }
 }

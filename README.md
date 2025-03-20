@@ -37,7 +37,9 @@ Oh, and one important thing: this project assumes that an **airline** and an **a
    SUPER_ADMIN_PASSWORD=admin
    ```
 
-4. Run the following command to start the application:
+4. Before running the application, take a moment to read the `docker-compose.yml` file to understand how the services are configured.
+
+5. Run the following command to start the application:
 
    ```bash
    docker-compose up -d --build
@@ -45,7 +47,7 @@ Oh, and one important thing: this project assumes that an **airline** and an **a
 
    This will spin up the app along with Postgres and Redis containers.
 
-5. Access the app at `http://localhost:3000`.
+6. Access the app at `http://localhost:3000`.
 
 ## Technologies Used
 
